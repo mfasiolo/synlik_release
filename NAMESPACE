@@ -13,21 +13,8 @@ importFrom(parallel, makeCluster)
 importFrom(parallel, stopCluster)
 importFrom(parallel, detectCores)
 
-importFrom(Matrix, nearPD)
-
 importFrom(stats, simulate)
 importFrom(stats, coef)
 importFrom(stats, vcov)
 importFrom(stats, confint)
 
-importFrom(lars, cv.lars)
-importFrom(lars, lars)
-importFrom(lars, coef.lars)
-
-# Exported Methods
-exportMethods(simulate)
-exportMethods(plot)
-exportMethods(continue)
-
-# Exported classes
-exportClasses(synlik, synMcmc, synMaxlik)

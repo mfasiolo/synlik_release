@@ -1,5 +1,5 @@
 
-.extractHessian <- cmpfun( function(secondDeriv, nPar)
+.extractHessian <- cmpfun(function(secondDeriv, nPar)
 {
   hessian <- matrix(NA, nPar, nPar)
   

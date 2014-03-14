@@ -2,19 +2,19 @@
 \alias{checkCoverage.synMaxlik}
 \title{Estimated coverage of the synMaxlik optimization rountine}
 \usage{
-  checkCoverage.synMaxlik(object, nRep, nIter, nsim,
+  checkCoverage.synMaxlik(object, nrep, niter, nsim,
     initCov, initPar = object@param, addRegr = TRUE,
     constr = list(), control = list(), multicore = FALSE,
-    ncores = min(detectCores() - 1, nRep), cluster = NULL,
+    ncores = min(detectCores() - 1, nrep), cluster = NULL,
     verbose = FALSE, ...)
 }
 \arguments{
   \item{object}{("synlik") object.}
 
-  \item{nRep}{Number of time the whole simulation is
+  \item{nrep}{Number of time the whole simulation is
   repeated in order ot obtain the coverage.}
 
-  \item{nIter}{(integer) numer of iterations.}
+  \item{niter}{(integer) numer of iterations.}
 
   \item{nsim}{(integer) numer of simulations from the model
   at each step.}

@@ -8,7 +8,7 @@
 #         trans$parIndex = (numeric integers) indexes of the parameters to be transformed (ex: c(1, 3))
 #         trans$transform = (character vector) _names_ of the functions to be applied to each paramters (ex: c("exp", "log")) 
 
-plot.synMaxlik <- function(x, trans = NULL, Lag = 10, tol = 1e-8, verbose = TRUE)
+plot.synMaxlik <- function(x, trans = NULL, Lag = 10, tol = 1e-8, verbose = TRUE, ...)
 {
   if(!is(x, "synMaxlik")) stop("object has to be of class \"synMaxlik\" ")
   
@@ -95,8 +95,8 @@ plot.synMaxlik <- function(x, trans = NULL, Lag = 10, tol = 1e-8, verbose = TRUE
     
   par(mfrow = c(1, 1))
   saveOpt <- par()$mar
-  finalCorr <- .corFromCov(covariance)
-  plotMatrix(finalCorr, 
+  finalCorr <- extractCorr(covariance)
+  .plotMatrix(finalCorr, 
              title = "Estimated correlation matrix", 
              xLabels = colnames(finalCorr), 
              yLabels = colnames(finalCorr), 
@@ -173,7 +173,7 @@ plot.synMaxlik <- function(x, trans = NULL, Lag = 10, tol = 1e-8, verbose = TRUE
     saveOpt <- par()$mar
     finalCovar <- tail(covarEstim, 1)[[1]]
     finalCorr <- diag(sqrt(diag(finalCovar))^-1, nPar)%*%finalCovar%*%diag(sqrt(diag(finalCovar))^-1, nPar)
-    plotMatrix(finalCorr, title = "Final correlation matrix of the local model", xLabels = names(x@param), yLabels = names(x@param), 
+    .plotMatrix(finalCorr, title = "Final correlation matrix of the local model", xLabels = names(x@param), yLabels = names(x@param), 
                scaleLab = "Correlation", correl = TRUE)
     suppressWarnings( par(mar = saveOpt) )
     

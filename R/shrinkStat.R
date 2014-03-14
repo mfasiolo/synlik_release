@@ -31,7 +31,7 @@ shrinkStat <- function(object, nsim, mu, sigma, type = "ridge", constr = list(),
     nsim <- nrow(simulStats)
     
     # Cleaning the stats from NANs
-    clean <- .cleanStats(simulStats)
+    clean <- .clean(simulStats)
     if(clean$nBanned > 0) simulStats <- clean$cleanX
     if(nrow(simulStats) < nsim / 3) warning(paste(nsim - nrow(simulStats), "out of", nsim, "statistics vectors", "contain NAs and will not be used"))
         

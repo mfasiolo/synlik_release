@@ -1,0 +1,19 @@
+citHeader("To cite the synlik package in publications use:")
+
+citEntry(
+         entry="Manual",
+         title="synlik: Synthetic Likelihood methods for intractable likelihoods (R package)",
+         author=personList(
+ 	   as.person("Matteo Fasiolo"),
+	   as.person("Simon Wood")
+	   ),	   
+	 year=2014,
+	 url="http://XXX.org",
+	 textVersion=paste(
+			   "Matteo Fasiolo, Simon Wood",
+			   "synlik: Synthetic Likelihood methods for intractable likelihoods (R package)",
+			   "http://XXX.org"
+			  )	   
+	 )		 
+
+citFooter("As synlik is often updated, you may want to cite its version number. Find it with 'help(package=synlik)'.")

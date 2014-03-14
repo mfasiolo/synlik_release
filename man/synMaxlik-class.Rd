@@ -14,7 +14,7 @@
   \item{initCov}{Covariance matrix used to simulate the
   parameter at each step of the optimization routine
   (\code{matrix}).} \item{addRegr}{If FALSE the statistics
-  calculated by object@summaries will be used (SL
+  calculated by \code{object@summaries} will be used (SL
   approach). If TRUE the simulated parameters will be
   regressed on the statistics and the fitted values of the
   paramaters given the _observed_ statistics will be used
@@ -27,11 +27,11 @@
   elements in "indexes" (\code{list}).}
   \item{control}{Named list of control setting for the
   optimization routine (\code{list}).} \item{multicore}{If
-  TRUE the object@simulator and object@summaries functions
-  will be executed in parallel. That is the nsim
-  simulations will be divided in multiple cores
-  (\code{logical}).} \item{ncores}{Number of cores to use
-  if multicore == TRUE (\code{numeric}).}
+  TRUE the \code{object@simulator} and
+  \code{object@summaries} functions will be executed in
+  parallel. That is the nsim simulations will be divided in
+  multiple cores (\code{logical}).} \item{ncores}{Number of
+  cores to use if multicore == TRUE (\code{numeric}).}
   \item{resultPar}{Matrix typically nIter by
   length(initPar) where the i-th row contains the estimate
   of the parameters at the i-th iteration (\code{matrix}).}

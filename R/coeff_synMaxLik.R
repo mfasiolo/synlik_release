@@ -12,11 +12,11 @@
 #' @return A matrix where each row contains a 95% confidence interval for each parameter. If the estimated Hessian
 #'         is not PD then the boundaries of the CI will be set to NA.       
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>                       
-#' @export coef.synMaxlik
-#' @method coef.synMaxlik synMaxlik
-#' @S3method coef.synMaxlik synMaxlik
+#' #@export coef.synMaxlik
+#' #@method coef.synMaxlik synMaxlik
+#' #@S3method coef.synMaxlik synMaxlik
 
-coef.synMaxlik <- function(object, Lag = 10, tol = 1e-12)
+coef.synMaxlik <- function(object, Lag = 10, tol = 1e-12, ...)
 {
   if(!is(object, "synMaxlik")) stop("object has to be of class \"synMaxlik\" ")
   

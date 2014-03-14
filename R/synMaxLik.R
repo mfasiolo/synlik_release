@@ -49,7 +49,7 @@
 #                   elements of the covariance                    
 # verbose = (logical) print whether the limits are violated
 
-.getCovariance <- cmpfun(function(hessian, upLim, lowLim, verbose = FALSE) 
+.getCovariance <- function(hessian, upLim, lowLim, verbose = FALSE) 
 {
   stopifnot( is.matrix(hessian), is.vector(upLim), is.vector(lowLim), all(upLim > lowLim))
   
@@ -72,7 +72,7 @@
   }
   
   round(covar, 14)
-})
+}
 
 ####
 

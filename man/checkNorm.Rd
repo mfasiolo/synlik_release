@@ -1,19 +1,24 @@
 \name{checkNorm}
 \alias{checkNorm}
-\title{Checking the multivariate normality approximation.}
+\title{Checking the multivariate normal approximation.}
 \usage{
-  checkNorm(object, observed = NULL, param = object@param,
-    nsim = 1000, cex.axis = 1, cex.lab = 1, ...)
+  checkNorm(object, param = object@param, nsim = 1000,
+    observed = NULL, cex.axis = 1, cex.lab = 1, ...)
 }
 \arguments{
-  \item{object}{An object of class "synlik" or a matrix
-  where each row is a random vector.}
+  \item{object}{An object of class \code{synlik} or a
+  matrix where each row is a random vector.}
 
   \item{param}{A vector of model's parameters at which the
   summary statistics will be simulated.}
 
+  \item{observed}{A vector of observed summary statistics.
+  By default \code{NULL}, so \code{object@data} will be
+  used as observed statistics.  It will be looked at only
+  if \code{object} is a matrix.}
+
   \item{nsim}{number of summary statistics to be simulated
-  if object is of class "synlik", otherwise it is not
+  if object is of class \code{synlik}, otherwise it is not
   used.}
 
   \item{cex.axis}{Axis scale expansion factor.}
@@ -21,9 +26,9 @@
   \item{cex.lab}{Axis label expansion factor.}
 
   \item{...}{additional arguments to be passed to
-  object@simulator and object@summaries.  In general I
-  would avoid using it and including in object@extraArgs
-  everything they need.}
+  \code{object@simulator} and \code{object@summaries}.  In
+  general I would avoid using it and including in
+  \code{object@extraArgs} everything they need.}
 }
 \value{
   Mainly produces plots and prints output. Also an array
@@ -31,9 +36,9 @@
   than observed.
 }
 \description{
-  Given an object of class "synlik" this routine provides a
-  graphical check of whether the distribution of the random
-  summary statistics is multivariate normal.
+  Given an object of class \code{synlik} this routine
+  provides a graphical check of whether the distribution of
+  the random summary statistics is multivariate normal.
 }
 \details{
   The method is from section 7.5 of Krzanowski (1988). The
@@ -53,6 +58,20 @@
   In simulations, perfectly MVN data produce highly
   variable results, so that the approach lacks any real
   power.
+}
+\examples{
+#### Create Object
+data(ricker_sl)
+
+#### Simulate from the object
+ricker_sl@data <- simulate(ricker_sl)
+ricker_sl@extraArgs$obsData <- ricker_sl@data
+
+#### Checking multivariate normality
+checkNorm(ricker_sl)
+
+# With matrix input
+checkNorm(matrix(rnorm(200), 100, 2))
 }
 \author{
   Simon N. Wood, maintained by Matteo Fasiolo

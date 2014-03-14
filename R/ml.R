@@ -1,13 +1,13 @@
 
 # Maximimum likelihood
 
-ml <- function(likfun, initpar, initcov, np, niter, priorfun = NULL, alpha = 0.95, temper = rep(1, niter), recycle = FALSE,
+ml <- function(likFun, initPar, initCov, np, niter, priorFun = NULL, alpha = 0.95, temper = rep(1, niter), recycle = FALSE,
                multicore = FALSE, ncores = detectCores() - 1, cluster = NULL, 
                constr = list(), verbose = FALSE, ...)
 {  
-  parCov <- initcov
-  npar <- length(initpar)
-  parMean <- initpar
+  parCov <- initCov
+  npar <- length(initPar)
+  parMean <- initPar
   
   stopifnot( is.vector(temper), length(temper) == niter )
   
@@ -36,10 +36,10 @@ ml <- function(likfun, initpar, initcov, np, niter, priorfun = NULL, alpha = 0.9
     simpar <- .paramsSimulator(theMean = parMean, covar = parCov, nsim = np, constr = constr)
     
     # Evaluating the likelihoods
-    llk <- .funEval(parMat = simpar, fun = likfun, multicore = multicore, cluster = cluster, ...)
+    llk <- .funEval(parMat = simpar, fun = likFun, multicore = multicore, cluster = cluster, ...)
     
     # Evaluate log-prior of each simulated set of parameters
-    logprior <- if( !is.null(priorfun) ){ apply(simpar, 1, priorfun, ...) } else { rep(0, np) }
+    logprior <- if( !is.null(priorFun) ){ apply(simpar, 1, priorFun, ...) } else { rep(0, np) }
     
     # Adding the latest component to the mixture
     storage[[ as.character(ii) ]] <- list("X" = simpar, 
@@ -84,11 +84,11 @@ ml <- function(likfun, initpar, initcov, np, niter, priorfun = NULL, alpha = 0.9
   
   # Extract all estimated likelihood and simulated parameters 
   timeOrder <- as.character(sort(as.numeric(ls(storage))))
-  outloglik <- do.call("c", lapply(storage, "[[", "llk")[ timeOrder ] )
-  outlogprior <- do.call("c", lapply(storage, "[[", "logprior")[ timeOrder ] )
+  outLogLik <- do.call("c", lapply(storage, "[[", "llk")[ timeOrder ] )
+  outLogPrior <- do.call("c", lapply(storage, "[[", "logprior")[ timeOrder ] )
   outPar <- do.call("rbind", lapply(storage, "[[", "X")[ timeOrder ] )
   
-  colnames(outEstim) <- colnames(outPar) <- names(initpar)
+  colnames(outEstim) <- colnames(outPar) <- names(initPar)
   
-  return( list("estim" = outEstim, "simpar" =  outPar, "simloglik" = outloglik, "simlogprior" = outlogprior  ) )
+  return( list("estim" = outEstim, "simPar" =  outPar, "simLogLik" = outLogLik, "simLogPrior" = outLogPrior  ) )
 }

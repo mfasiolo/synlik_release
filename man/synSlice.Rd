@@ -2,21 +2,16 @@
 \alias{synSlice}
 \title{Plot slices of the synthetic log-likelihood.}
 \usage{
-  synSlice(object, parName, range, nsim,
-    param = object@param, draw = TRUE, trans = NULL,
+  synSlice(object, ranges, nsim, param = object@param,
+    pairs = FALSE, draw = TRUE, trans = NULL,
     multicore = FALSE, ncores = detectCores() - 1,
     cluster = NULL, ...)
 }
 \arguments{
   \item{object}{("synlik") object.}
 
-  \item{parName}{Names of the parameters wrt which we want
-  to slice the synthetic likelihood (ex: "alpha" or
-  \code{c("alpha", "beta")}).  \code{length(parName)} has
-  to be <= 2.}
-
-  \item{range}{Range of values along which we want the
-  slice. If \code{length(parName) == 1} than range has a
+  \item{ranges}{ranges of values along which we want the
+  slices. If \code{length(parName) == 1} than range has a
   vector, while if \code{length(parName) == 2} it have to
   be a named list of 2 vectors (ex: \code{list("alpha" =
   1:10, "beta" = 10:1)}).}

@@ -2,8 +2,8 @@
 #' Estimated coverage of the synMaxlik optimization rountine
 #'
 #' @param object  ("synlik") object.
-#' @param nRep    Number of time the whole simulation is repeated in order ot obtain the coverage.
-#' @param nIter   (integer) numer of iterations.
+#' @param nrep    Number of time the whole simulation is repeated in order ot obtain the coverage.
+#' @param niter   (integer) numer of iterations.
 #' @param nsim    (integer) numer of simulations from the model at each step.
 #' @param initCov  (matrix) initial covariance matrix used to simulate the paramters at each step.
 #' @param initPar  (numeric) vector of initial values of the parameters.
@@ -29,10 +29,10 @@
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
 #' @export checkCoverage.synMaxlik
 
-checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar = object@param, 
+checkCoverage.synMaxlik <- function(object, nrep, niter, nsim, initCov, initPar = object@param, 
                                     addRegr = TRUE, constr = list(), control = list(),
                                     multicore = FALSE, 
-                                    ncores = min(detectCores() - 1, nRep), 
+                                    ncores = min(detectCores() - 1, nrep), 
                                     cluster = NULL, 
                                     verbose = FALSE,  ...)
 {
@@ -45,7 +45,7 @@ checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar 
   {
     object@data <- simulate(object, nsim = 1, stats = FALSE, ...)
     object <- synMaxlik(object = object, 
-                        nIter = nIter, 
+                        niter = niter, 
                         nsim = nsim, 
                         initCov = initCov, 
                         initPar = initPar, 
@@ -57,7 +57,7 @@ checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar 
     return( suppressWarnings( coef.synMaxlik(object)$par ) )
   }
   
-  # Running synMaxlik optimization nRep times, possibly on multiple cores
+  # Running synMaxlik optimization nrep times, possibly on multiple cores
   if(multicore){
     
     tmp <- .clusterSetUp(cluster = cluster, ncores = ncores, libraries = "synlik", exportALL = TRUE)
@@ -68,12 +68,12 @@ checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar 
     # I put the environment of the function to apply to .Global to avoid that exports all the enviroment at every round of clusterApply.
     environment(funToApply) <- .GlobalEnv
     
-    estimates <- clusterApply(cluster, seq.int(1, nRep), funToApply, ...)
+    estimates <- clusterApply(cluster, seq.int(1, nrep), funToApply, ...)
     
     if(clusterCreated) cluster <- stopCluster(cluster)
   } else {
     
-    estimates <- lapply(seq.int(1, nRep), funToApply, ...)
+    estimates <- lapply(seq.int(1, nrep), funToApply, ...)
     
   }
   
@@ -89,7 +89,7 @@ checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar 
   
   cover <- numeric(length(trueParam))
   nGood <- 0
-  for(ii in 1:nRep)
+  for(ii in 1:nrep)
   {
     if( !any(is.na(tmp[[ii]])) ) 
       {
@@ -98,7 +98,7 @@ checkCoverage.synMaxlik <- function(object, nRep, nIter, nsim, initCov, initPar 
       }
   }
   
-  if(nGood < nRep) warning(paste(nRep-nGood, "out of", nRep, "confidence intervals couldn't be calculated because the Hessian is not positive definite."))
+  if(nGood < nrep) warning(paste(nrep-nGood, "out of", nrep, "confidence intervals couldn't be calculated because the Hessian is not positive definite."))
   
   cover <- matrix(cover/nGood * 100, 1, length(trueParam))
   rownames(cover) <- "Coverage %"

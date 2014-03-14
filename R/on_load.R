@@ -1,6 +1,6 @@
 ## preliminary code
 
-print.synlik.version <- function()
+printSynlikVersion <- function()
 { library(help=synlik)$info[[1]] -> version
   version <- version[pmatch("Version",version)]
   um <- strsplit(version," ")[[1]]
@@ -10,7 +10,7 @@ print.synlik.version <- function()
 
 
 .onAttach <- function(...) { 
-  print.synlik.version()
+  printSynlikVersion()
 }
 
 .onUnload <- function(libpath) library.dynam.unload("synlik", libpath)
@@ -21,5 +21,5 @@ print.synlik.version <- function()
 
 .First.lib <- function(lib, pkg) {
   library.dynam("synlik", pkg, lib)
-  print.synlik.version()
+  printSynlikVersion()
 }

@@ -9,16 +9,17 @@
 #'                If FALSE hessians will be simulated the asymptotic distribution of the regression
 #'                coefficients.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
+#' @method vcov sml
 #' @export
 #' 
 
 vcov.sml <- function(object, nreps = 1000, boot = TRUE, ...)
 { 
   # Including only parameters that were estimated
-  varPar <- diag(object@initcov) > 0
+  varPar <- diag(object@initCov) > 0
   
-  covar <- .vcov.ml(llk = object@simloglik, 
-                    parMat = object@simpar[ , varPar],
+  covar <- .vcov.ml(llk = object@simLogLik, 
+                    parMat = object@simPar[ , varPar],
                     nreps = nreps, 
                     boot = boot, ...)
   

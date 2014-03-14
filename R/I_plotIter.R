@@ -1,5 +1,5 @@
 
-.plotIter <- function(mat, trans = NULL, type = "line", addpoints = NULL, addplot = NULL, ...)
+.plotIter <- function(mat, trans = NULL, type = "line", addPoints = NULL, addPlot = NULL, ...)
 {
   if( !(type %in% c("line", "hist")) ) stop("type should be either line or hist")
   
@@ -14,9 +14,9 @@
     # Transform each column if needed
     mat <- .transMatrix(mat, trans)
     
-    if( !is.null(addpoints) ){
-      xpoints <- addpoints$x
-      ypoints <- addpoints$y
+    if( !is.null(addPoints) ){
+      xpoints <- addPoints$x
+      ypoints <- addPoints$y
       ypoints <- .transMatrix(ypoints, trans)
     }
     
@@ -27,10 +27,10 @@
       # Either lines
       if(type == "line")
       {
-        if( is.null(addpoints) )
+        if( is.null(addPoints) )
         {
         plot(1:nrow(mat), mat[ , nam], type = 'l', main = nam,
-             ylab = parNames[nam], xlab = "Iteration", ...)
+             ylab = nam, xlab = "Iteration", ...)
         } else {
           plot(xpoints, ypoints[ , nam], main = nam,
                ylab = nam, xlab = "Iteration",
@@ -43,7 +43,7 @@
         hist(mat[ , nam],  main = nam, ylab = nam, xlab = nam, ...)
       }
       
-      if( !is.null(addplot) ) get(addplot)(nam, ...)
+      if( !is.null(addPlot) ) get(addPlot)(nam, ...)
       
       if( !(counter %% (panelDim^2)) && (counter != nPar) ) readline(prompt = "Press <Enter> to see the next plot...") 
       counter <- counter + 1

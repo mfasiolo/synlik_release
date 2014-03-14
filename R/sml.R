@@ -1,27 +1,29 @@
 
-sml <- function(object, initpar, initcov, np, nsim, niter, alpha = 0.95,
-                priorfun = NULL, temper = NULL, recycle = FALSE,
+sml <- function(object, initPar, initCov, np, nsim, niter, alpha = 0.95,
+                priorFun = NULL, temper = NULL, recycle = FALSE,
                 multicore = FALSE, ncores = detectCores() - 1, cluster = NULL, 
                 constr = list(), verbose = FALSE, ...)
 {
-  if( is.null(names(initpar)) ) names(initpar) <- names(object@param)
+  if( is.null(names(initPar)) ) names(initPar) <- names(object@param)
+  
+  message("remember to check why the recycling isn't working!!")
   
   # Force evaluation of everything in the environment, so it will available to likfun on cluster
   if( multicore ) .forceEval(ALL = TRUE)
   
   # Function that will be used by sapply() or clusterApply to evaluate the likelihood
-  likfun <- function(param, temper, ...)
+  likFun <- function(param, temper, ...)
   {
-    synlikEval(object, param, nsim, multicore = FALSE, cluster = NULL, temper = temper, ...)$logLik
+    slik(object, param, nsim, multicore = FALSE, cluster = NULL, temper = temper, ...)
   }
   
   # Calling general maximum likelihood method
-  tmp <- ml(likfun = likfun, 
-            initpar = initpar, 
-            initcov = initcov, 
+  tmp <- ml(likFun = likFun, 
+            initPar = initPar, 
+            initCov = initCov, 
             np = np, 
             niter = niter,
-            priorfun = priorfun,
+            priorFun = priorFun,
             alpha = alpha,
             temper = temper,
             recycle = recycle,
@@ -33,12 +35,12 @@ sml <- function(object, initpar, initcov, np, nsim, niter, alpha = 0.95,
             ...)
   
   return( .sml(object, 
-               initpar = initpar, 
-               initcov = initcov, 
+               initPar = initPar, 
+               initCov = initCov, 
                np = np, 
                nsim = nsim, 
                niter = niter,
-               priorfun = priorfun,
+               priorFun = priorFun,
                alpha = alpha,
                temper = temper,
                recycle = recycle,
@@ -47,9 +49,9 @@ sml <- function(object, initpar, initcov, np, nsim, niter, alpha = 0.95,
                constr = constr,
                
                estim = tmp$estim,
-               simloglik = tmp$simloglik,
-               simlogprior = tmp$simlogprior,
-               simpar = tmp$simpar)  )
+               simLogLik = tmp$simLogLik,
+               simLogPrior = tmp$simLogPrior,
+               simPar = tmp$simPar)  )
 }
 
 
@@ -68,7 +70,7 @@ sml <- function(object, initpar, initcov, np, nsim, niter, alpha = 0.95,
 #       propUpdate <- matrix(0, length(parMean), length(parMean))
 #       for(kk in 1:np)
 #       {
-#         propUpdate <- propUpdate + w[kk] * tcrossprod(simpar[kk, ] - parMean, simpar[kk, ] - parMean)
+#         propUpdate <- propUpdate + w[kk] * tcrossprod(simPar[kk, ] - parMean, simPar[kk, ] - parMean)
 #       }
 #       
 #       ESS <- 1 / sum(w ^ 2)

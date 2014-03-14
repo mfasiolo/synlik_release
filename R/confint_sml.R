@@ -6,9 +6,10 @@
 #'                  If missing, all parameters are considered.
 #' @param level     the confidence level required.
 #' @param lag     (integer) final estimate of the parameter is the mean of the 
-#'                last "lag" iterations. Hence lag <= object@niter.
+#'                last "lag" iterations. Hence lag <= object@@niter.
 #' @description Computes confidence intervals for one or more parameters in a fitted model of class "sml".
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
+#' @method confint sml
 #' @export
 #' 
 

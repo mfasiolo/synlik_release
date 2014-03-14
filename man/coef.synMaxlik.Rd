@@ -2,8 +2,8 @@
 \alias{coef.synMaxlik}
 \title{Get the final parameters' estimates from a synMaxLik object}
 \usage{
-  \method{coef.synMaxlik}{synMaxlik} (object, Lag = 10,
-    tol = 1e-12)
+  \method{coef.synMaxlik}{synMaxlik #} (object, Lag = 10,
+    tol = 1e-12, ...)
 }
 \arguments{
   \item{object}{An object of class "synMaxlik".}
@@ -29,6 +29,6 @@
   definite).
 }
 \author{
-  Matteo Fasiolo <matteo.fasiolo@gmail.com>
+  Matteo Fasiolo <matteo.fasiolo@gmail.com> #
 }
 

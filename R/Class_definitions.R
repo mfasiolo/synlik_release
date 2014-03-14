@@ -41,33 +41,61 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 
 ### Class Definition
 #' \code{synlik-class}
+#' 
+#' @description{ Basic class for simulation-based approximate inference using Synthetic Likelihood methods.  }
 #'
+#' \section{Slots}{
 #' \describe{
-#'    \item{param}{Vector of parameters used by object@@simulator (\code{numeric}).}
-#'    \item{simulator}{Function that simulates from the model (\code{function}).}
-#'    \item{summaries}{Function that transforms simulated data into summary statistics (\code{function}).}
-#'    \item{data}{Vector containing the observed data (\code{numeric}).}
-#'    \item{extraArgs}{List containing all the extra arguments to be passed to object@@simulator and object@@summaries (\code{list}).}
+#'    \item{param}{Named vector of parameters used by \code{object@@simulator} (\code{numeric}).}
+#'    \item{simulator}{Function that simulates from the model (\code{function}). It has to have prototype \code{fun(param, nsim, extraArgs, ...)}. 
+#'                     If \code{summaries()} is not specified the \code{simulator()} has output a matrix with \code{nsim} rows, where
+#'                     each row is a vector of simulated statistics. Otherwise it can output any kind of object, and this output will be
+#'                     passed to \code{summaries()}.}
+#'    \item{summaries}{Function that transforms simulated data into summary statistics (\code{function}). 
+#'                     It has to have prototype \code{fun(x, extraArgs, ...)} and it has to output a matrix with \code{nsim} rows, where
+#'                     each row is a vector of simulated statistics. Parameter \code{x} contains the data.}
+#'    \item{data}{Object containing the observed data or statistics (\code{ANY}).}
+#'    \item{extraArgs}{List containing all the extra arguments to be passed to \code{object@@simulator} and \code{object@@summaries} (\code{list}).}
+#'    \item{plotFun}{Function that will be used to plot \code{object@@data}. Prototype should be \code{fun(x, ...)} (\code{function}).}
 #'  }
+#'  
 #' @name synlik-class
 #' @rdname synlik-class
+#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
+#' @examples
+#' #### Create Object
+#' ricker_sl <- new("synlik",
+#'                  simulator = rickerStats,
+#'                  summaries = wood2010,
+#'                  param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
+#'                  extraArgs = list("nObs" = 50, "nBurn" = 50),
+#'                  plotFun = function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+#' )
+#'  
+#' # Simulate from the object
+#' ricker_sl@@data <- simulate(ricker_sl)
+#' ricker_sl@@extraArgs$obsData <- ricker_sl@@data # Needed by WOOD2010 statistics
+#' 
+#' plot(ricker_sl)      
 #' @exportClass synlik
+#'
+
 .synlik <- setClass( "synlik",
                      representation( param = "numeric",
                                      simulator = "function",
                                      summaries = "functionOrNULL",
-                                     statTrans = "functionOrNULL",
                                      data = "ANY",
-                                     extraArgs = "list"
+                                     extraArgs = "list",
+                                     plotFun = "functionOrNULL"
                      ),
                        prototype = prototype(
                        param = numeric(),
                        simulator = function() NULL,
                        summaries = NULL,
-                       statTrans = NULL,
                        data = NULL, 
-                       extraArgs = list()
+                       extraArgs = list(),
+                       plotFun = NULL
                        ),
                      
                      validity = .check.synlik
@@ -76,14 +104,14 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 
 
 ##################################
-######### synMcmc: a synlik object after MCMC
+######### smcmc: a synlik object after MCMC
 ##################################
 
 ### Validity check
 
-.check.synMcmc <- function(object)
+.check.smcmc <- function(object)
 {
-  if(!is(object, "synMcmc")) stop("object has to be of class \"synMcmc\" ")
+  if(!is(object, "smcmc")) stop("object has to be of class \"smcmc\" ")
 
   errors <- character()
   
@@ -93,71 +121,102 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 }
 
 
-
 ### Class Definition
-#' \code{synMcmc-class}
+#' \code{smcmc-class}
+#' 
+#' @description{ Object representing the results of MCMC estimation on an object of class \code{synlik}, from which it inherits.  }
 #'
+#' \section{Slots}{
 #' \describe{
 #'    \item{initPar}{Vector of initial parameters where the MCMC chain will start (\code{numeric}).}
-#'    \item{nIter}{Number of MCMC iterations (\code{numeric}).}
-#'    \item{burnIn}{Number of initial MCMC iterations which are discarded (\code{numeric}).}
-#'    \item{priorFun}{Function that takes a vector of parameters as input and gives 
-#'                    either 0 or 1 as output (uniform prior) (\code{function}).}
+#'    \item{niter}{Number of MCMC iterations (\code{integer}).}
+#'    \item{nsim}{Number of simulations from the simulator at each step of the MCMC algorithm (\code{integer}).}
+#'    \item{burn}{Number of initial MCMC iterations that are discarded (\code{integer}).}
+#'    \item{priorFun}{Function that takes a vector of parameters as input and the log-density of the prior
+#'                    as output. If the output is not finite the proposed point will be discarded. (\code{function}).
+#'                    The function needs to have signature \code{fun(x, ...)}, where \code{x} represents the input parameters (\code{function}).}
 #'    \item{propCov}{Matrix representing the covariance matrix to be used to perturb the 
 #'                   parameters at each step of the MCMC chain (\code{matrix}).}
-#'    \item{nsim}{Number of simulations from the simulator at each step of the MCMC algorithm (\code{numeric}).}
-#'    \item{sameSeed}{If TRUE the synthetic likelihood will be evaluated at the current and proposed positions in the parameter
-#'                    space using the same seed (thus doubling the computational effort). If FALSE the likelihood of the current
+#'    \item{targetRate}{Target rate for the adaptive MCMC sampler. Should be in (0, 1), default is NULL (no adaptation). The adaptation
+#'                      uses the approach of Vihola (2011). (\code{numeric})}
+#'    \item{recompute}{If TRUE the synthetic likelihood will be evaluated at the current and proposed positions in the parameter
+#'                    space (thus doubling the computational effort). If FALSE the likelihood of the current
 #'                    position won't be re-estimated (\code{logical}).}
-#'    \item{multicore}{If TRUE the object@@simulator and object@@summaries functions will
+#'    \item{multicore}{If TRUE the \code{object@@simulator} and \code{object@@summaries} functions will
 #'                     be executed in parallel. That is the nsim simulations will be divided in multiple cores (\code{logical}).}
-#'    \item{ncores}{Number of cores to use if multicore == TRUE (\code{numeric}).}
-#'    \item{acceptRate}{Acceptance rate of the MCMC chain, between 0 and 1 (\code{numeric}).}
-#'    \item{mcmcChain}{Matrix of size nIter by length(initPar) where the i-th row contains the position of the MCMC algorithm
+#'    \item{ncores}{Number of cores to use if multicore == TRUE (\code{integer}).}
+#'    \item{accRate}{Acceptance rate of the MCMC chain, between 0 and 1 (\code{numeric}).}
+#'    \item{chains}{Matrix of size niter by length(initPar) where the i-th row contains the position of the MCMC algorithm
 #'                      in the parameter space at the i-th (\code{matrix}).}
-#'    \item{LoglikChain}{Vector of nIter elements where the i-th element is contains the estimate of the 
+#'    \item{llkChain}{Vector of niter elements where the i-th element is contains the estimate of the 
 #'                       synthetic likelihood at the i-th iteration (\code{numeric}).}
+#'    \item{control}{Control parameters used by the MCMC sampler.}
 #'  }
 #'  
-#' @name synMcmc-class
-#' @rdname synMcmc-class
+#' @name smcmc-class
+#' @rdname smcmc-class
+#' @references Vihola, M. (2011) Robust adaptive Metropolis algorithm with coerced acceptance rate. 
+#'             Statistics and Computing. 
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
-#' @exportClass synMcmc
+#' @examples
+#' # Load "synlik" object
+#' data(ricker_sl)
 #'
-.synMcmc <-setClass("synMcmc",
+#' plot(ricker_sl)
+#'  
+#' # MCMC estimation
+#' set.seed(4235)
+#' ricker_sl <- smcmc(ricker_sl, 
+#'                    initPar = c(3.2, -1, 2.6),
+#'                    niter = 50, 
+#'                    burn = 3,
+#'                    priorFun = function(input, ...) 1, 
+#'                    propCov = diag( c(0.1, 0.1, 0.1) )^2, 
+#'                    nsim = 200, 
+#'                    multicore = FALSE)
+#' 
+#' # Continue with additional 50 iterations
+#' ricker_sl <- continue(ricker_sl, niter = 50)
+#' 
+#' plot(ricker_sl)       
+#' @exportClass smcmc
+#'
+.smcmc <-setClass("smcmc",
                     representation( initPar = "numeric",
-                                    nIter = "numeric",
-                                    nsim = "numeric",
+                                    niter = "integer",
+                                    nsim = "integer",
                                     propCov = "matrix",
-                                    burnIn = "numeric",
+                                    burn = "integer",
                                     priorFun = "function",
                                     
                                     targetRate = "numericOrNULL",
                                     recompute = "logical",
                                     multicore = "logical",
+                                    ncores = "integer",
                                     control = "list",
                                     
-                                    acceptRate = "numeric",
-                                    mcmcChain = "matrix",
-                                    LogLikChain = "numeric"
+                                    accRate = "numeric",
+                                    chains = "matrix",
+                                    llkChain = "numeric"
                     ),
                     prototype = prototype(initPar = numeric(),
-                                          nIter = numeric(),
-                                          nsim = numeric(), 
+                                          niter = 0L,
+                                          nsim = 0L, 
                                           propCov = matrix( , 0, 0),
-                                          burnIn = 0,
-                                          priorFun = function(param) 1,
+                                          burn = 0L,
+                                          priorFun = function(param, ...) 0,
                                           
-                                          targetRate = 0.5,
+                                          targetRate = NULL,
                                           recompute = FALSE,
                                           multicore = FALSE,
+                                          ncores = 1L,
                                           control = list(),
                                           
-                                          acceptRate = numeric(),
-                                          mcmcChain = matrix( , 0, 0),
-                                          LogLikChain = numeric()),
+                                          accRate = numeric(),
+                                          chains = matrix( , 0, 0),
+                                          llkChain = numeric()),
                     contains = "synlik",
-                    validity = .check.synMcmc
+                    validity = .check.smcmc
 )
 
 
@@ -187,7 +246,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #'    \item{nIter}{Number of iterations of the optimization routine (\code{numeric}).}
 #'    \item{nsim}{Number of simulations from the simulator at each step of the optimization routine (\code{numeric}).}
 #'    \item{initCov}{Covariance matrix used to simulate the parameter at each step of the optimization routine (\code{matrix}).}
-#'    \item{addRegr}{If FALSE the statistics calculated by object@@summaries will be used (SL approach). If TRUE the simulated 
+#'    \item{addRegr}{If FALSE the statistics calculated by \code{object@@summaries} will be used (SL approach). If TRUE the simulated 
 #'                   parameters will be regressed on the statistics and the fitted values of the paramaters given the _observed_
 #'                   statistics will be used as statistics (this is called SL+ approach) (\code{logical}).}
 #'    \item{constr}{Named list of contraints on the parameters, it has 3 elements: 
@@ -195,7 +254,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #'                  [["upper"]]  = (numeric) upper bounds for the elements in "indexes";
 #'                  [["lower"]]  = (numeric) lower bounds for the elements in "indexes" (\code{list}).}
 #'    \item{control}{Named list of control setting for the optimization routine (\code{list}).}
-#'    \item{multicore}{If TRUE the object@@simulator and object@@summaries functions will
+#'    \item{multicore}{If TRUE the \code{object@@simulator} and \code{object@@summaries} functions will
 #'                     be executed in parallel. That is the nsim simulations will be divided in multiple cores (\code{logical}).}
 #'    \item{ncores}{Number of cores to use if multicore == TRUE (\code{numeric}).}
 #'    \item{resultPar}{Matrix typically nIter by length(initPar) where the i-th row contains the estimate of the 
@@ -215,15 +274,15 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #' @exportClass synMaxlik
 .synMaxlik <-setClass("synMaxlik",
                       representation( initPar = "numeric",
-                                      nIter   = "numeric",
-                                      nsim    = "numeric",
+                                      niter   = "integer",
+                                      nsim    = "integer",
                                       initCov   = "matrix",
                                       addRegr  = "logical",
                                       constr = "list",
                                       control = "list",
                                       continueCtrl = "list",
                                       multicore = "logical",
-                                      ncores = "numeric",
+                                      ncores = "integer",
                                     
                                       resultPar = "matrix",
                                       resultGrad = "matrix",
@@ -232,15 +291,15 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
                                       resultLoglik = "numeric"
                     ),
                     prototype = prototype(initPar = numeric(),
-                                          nIter   = numeric(),
-                                          nsim    = numeric(),
+                                          niter   = 0L,
+                                          nsim    = 0L,
                                           initCov   = matrix( , 0, 0),
                                           addRegr  = TRUE,
                                           constr = list(),
                                           control = list(),
                                           continueCtrl = list(),
                                           multicore = FALSE,
-                                          ncores = detectCores() - 1,
+                                          ncores = 1L,
                                           
                                           resultPar = matrix( , 0, 0),
                                           resultGrad = matrix( , 0, 0),
@@ -262,7 +321,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
   
   errors <- character()
   
-  if(length(object@initpar) == 0) errors <- c(errors, "length(initpar) should be > 0")
+  if(length(object@initPar) == 0) errors <- c(errors, "length(initPar) should be > 0")
   
   if(length(errors) == 0) TRUE else errors
 }
@@ -280,7 +339,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #'                  [["indexes"]] = (numeric integers) indexes of the elements to check;
 #'                  [["upper"]]  = (numeric) upper bounds for the elements in "indexes";
 #'                  [["lower"]]  = (numeric) lower bounds for the elements in "indexes" (\code{list}).}
-#'    \item{multicore}{If TRUE the object@@simulator and object@@summaries functions will
+#'    \item{multicore}{If TRUE the \code{object@@simulator} and \code{object@@summaries} functions will
 #'                     be executed in parallel. That is the nsim simulations will be divided in multiple cores (\code{logical}).}
 #'    \item{ncores}{Number of cores to use if multicore == TRUE (\code{numeric}).}
 #'    \item{estim}{Matrix typically nIter by length(initPar) where the i-th row contains the estimate of the 
@@ -299,41 +358,41 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
 #' @exportClass sml
 .sml <-setClass("sml",
-                      representation( initpar = "numeric",
-                                      initcov   = "matrix",
-                                      niter   = "numeric",
-                                      nsim    = "numeric",
-                                      np      = "numeric",
-                                      priorfun = "functionOrNULL",
+                      representation( initPar = "numeric",
+                                      initCov   = "matrix",
+                                      niter   = "integer",
+                                      nsim    = "integer",
+                                      np      = "integer",
+                                      priorFun = "functionOrNULL",
                                       alpha = "numeric",
                                       constr = "list",
                                       temper = "numericOrNULL",
                                       recycle = "logical",
                                       multicore = "logical",
-                                      ncores = "numeric",
+                                      ncores = "integer",
                                       
                                       estim = "matrix",
-                                      simloglik = "numeric",
-                                      simlogprior = "numeric",
-                                      simpar  = "matrix"
+                                      simLogLik = "numeric",
+                                      simLogPrior = "numeric",
+                                      simPar  = "matrix"
                       ),
-                      prototype = prototype(initpar = numeric(),
-                                            initcov   = matrix( , 0, 0),
-                                            niter   = numeric(),
-                                            nsim    = numeric(),
-                                            np      = numeric(),
-                                            priorfun = NULL,
+                      prototype = prototype(initPar = numeric(),
+                                            initCov   = matrix( , 0, 0),
+                                            niter   = 0L,
+                                            nsim    = 0L,
+                                            np      = 0L,
+                                            priorFun = NULL,
                                             alpha = 0.95,
                                             constr = list(),
                                             temper = NULL,
                                             recycle = FALSE,
                                             multicore = FALSE,
-                                            ncores = detectCores() - 1,
+                                            ncores = 1L,
                                             
                                             estim  = matrix( , 0, 0),
-                                            simloglik = numeric(),
-                                            simlogprior = numeric(),
-                                            simpar = matrix( , 0, 0)
+                                            simLogLik = numeric(),
+                                            simLogPrior = numeric(),
+                                            simPar = matrix( , 0, 0)
                                             
                       ),
                       contains = "synlik",

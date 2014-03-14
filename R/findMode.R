@@ -18,7 +18,7 @@
 #'
 
 findMode <- function(X, init = NULL, decay = 0.5, method = "BFGS", 
-                     sadTol = 1e-6, marginal = FALSE, draw = FALSE, ...)
+                     sadTol = 1e-6, marginal = FALSE, ...)
 {
   switch(class(X),
          "matrix"  = theData <- X,
@@ -47,36 +47,6 @@ findMode <- function(X, init = NULL, decay = 0.5, method = "BFGS",
   optOut <- optim(par = init, fn = objFun, gr = objGrad, method = method, ...)
   
   names(optOut)[c(1, 2, 3)] <- c("mode", "log-density", "number of evaluations")
-  
-  if(draw == TRUE)
-  {
-    nPoints <- 100
-    dens  <- evalPoints <- numeric(nPoints)
-    for(ii in 1:nDims)
-    {
-      evalPoints <- seq(min(theData[ , ii]), max(theData[ , ii]), length.out = nPoints)
-      densFun <- function(x) dsaddle(y = as.numeric(x), X = theData, tol = sadTol, decay = decay)$llk
-      
-      for(kk in 1:nPoints)
-      {
-        x <- optOut$mode
-        x[ii] <- evalPoints[kk]
-        dens[kk] <- densFun(x = x)
-      }
-      readline(prompt = "Press <Enter> to see the next density...")
-      
-      par(mfrow = c(2, 1))
-      hist(theData[ , ii], 
-           main = if(class(input) == "synMcmc") paste("Marginal posterior sample for parameter", names(input@params)[ii]) else paste("Marginal data for variable", ii),
-           xlab = if(class(input) == "synMcmc") names(input@params)[ii] else "Variable value")
-      
-      plot(evalPoints, dens, type = 'l',
-           main = if(class(input) == "synMcmc") paste("Transect of log-saddlepoint density wtr parameter", names(input@params)[ii]) else paste("Transect of log-saddlepoint density wtr variable", ii), 
-           xlab = if(class(input) == "synMcmc") names(input@params)[ii] else "Variable value", 
-           ylab = "Log-saddlepoint density")
-      abline(v = optOut$mode[ii], lty = 2)
-    }
-  }
   
   return(optOut)
 }

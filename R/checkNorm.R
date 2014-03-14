@@ -1,18 +1,20 @@
 #######################
 ###### Function that checks the multivariate normality of the statistics
 #######################
-#' Checking the multivariate normality approximation.
-#' @description Given an object of class "synlik" this routine provides a 
+#' Checking the multivariate normal approximation.
+#' @description Given an object of class \code{synlik} this routine provides a 
 #'              graphical check of whether the distribution of the random 
 #'              summary statistics is multivariate normal.
-#' @param object An object of class "synlik" or a matrix where each row is a random vector.
+#' @param object An object of class \code{synlik} or a matrix where each row is a random vector.
 #' @param param A vector of model's parameters at which the summary statistics will be simulated.
-#' @param nsim number of summary statistics to be simulated if object is of class "synlik", otherwise
+#' @param observed A vector of observed summary statistics. By default \code{NULL}, so \code{object@@data} will be used as observed statistics.
+#'                 It will be looked at only if \code{object} is a matrix.
+#' @param nsim number of summary statistics to be simulated if object is of class \code{synlik}, otherwise
 #'             it is not used.
 #' @param cex.axis Axis scale expansion factor.
 #' @param cex.lab  Axis label expansion factor.
-#' @param ... additional arguments to be passed to object@@simulator and object@@summaries.
-#'            In general I would avoid using it and including in object@@extraArgs everything they need.
+#' @param ... additional arguments to be passed to \code{object@@simulator} and \code{object@@summaries}.
+#'            In general I would avoid using it and including in \code{object@@extraArgs} everything they need.
 #' @details The method is from section 7.5 of Krzanowski (1988). The replicate vectors of summary statistic \code{S} 
 #'          are transformed to variables which should be univariate chi squared r.v.s with DoF given by the number of rows of \code{S}. 
 #'          An appropriate QQ-plot is produced, and the proportion of the data differing substantially from the ideal 
@@ -25,13 +27,28 @@
 #' @return  Mainly produces plots and prints output. Also an array indicating 
 #'          proportion of simulated statistics smaller than observed.
 #' @references Krzanowski, W.J. (1988) Principles of Multivariate Analysis. Oxford.            
-#' @author Simon N. Wood, maintained by Matteo Fasiolo <matteo.fasiolo@@gmail.com>.                         
+#' @author Simon N. Wood, maintained by Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @examples
+#' #### Create Object
+#' data(ricker_sl)
+#' 
+#' #### Simulate from the object
+#' ricker_sl@@data <- simulate(ricker_sl)
+#' ricker_sl@@extraArgs$obsData <- ricker_sl@@data 
+#' 
+#' #### Checking multivariate normality
+#' checkNorm(ricker_sl)
+#' 
+#' # With matrix input
+#' checkNorm(matrix(rnorm(200), 100, 2))
 #' @export
 #'
+
+
 checkNorm <- function(object,
-                      observed = NULL,
                       param = object@param, 
                       nsim = 1e3,
+                      observed = NULL,
                       cex.axis = 1, 
                       cex.lab = 1, 
                       ...)
@@ -44,7 +61,7 @@ checkNorm <- function(object,
   # I copy this function so I can mtrace() it
   summaries <- object@summaries
   
-  if(length(object@data) > 0)
+  if( !is.null(object@data) )
   { 
     
     s <- if( !is.null(summaries) )

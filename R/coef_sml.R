@@ -3,8 +3,9 @@
 #'
 #' @param object  ("sml") object.
 #' @param lag     (integer) final estimate of the parameter is the mean of the 
-#'                last "lag" iterations. Hence lag < object@niter.
+#'                last "lag" iterations. Hence lag < object@@niter.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
+#' @method coef sml
 #' @export
 #' 
 

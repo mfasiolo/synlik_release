@@ -74,7 +74,7 @@ shrinkCoef <- function(object, nsim, mu, sigma, type = "ridge", constr = list(),
       
       if(type == "ridge")
       {
-        tmp <- .autoLm.ridge(y ~ simul, lambda = lambda)
+        tmp <- .autoLm.ridge(y ~ simul)
         
         # Put the coefficients on the original scale
         if( is.null(tmp$Inter) ) stop("For some reason the ridge regression doesn't have an intercept!")

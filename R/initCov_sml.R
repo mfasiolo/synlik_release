@@ -1,28 +1,28 @@
 
 # Initialization for the covariance of "sml" objects.
 
-initCov.sml <- function(object, initpar, initcov, np, nsim, priorfun = NULL, 
+initCov.sml <- function(object, initPar, initCov, np, nsim, priorFun = NULL, 
                         multicore = FALSE, ncores = detectCores() - 1, cluster = NULL, 
                         constr = list(), verbose = FALSE, ...)
 {
-  if( is.null(names(initpar)) ) names(initpar) <- names(object@param)
+  if( is.null(names(initPar)) ) names(initPar) <- names(object@param)
   
   # Force evaluation of everything in the environment, so it will available to likfun on cluster
   if( multicore ) .forceEval(ALL = TRUE)
   
   # Function that will be used by sapply() or clusterApply to evaluate the likelihood
-  likfun <- function(param, temper, ...)
+  likFun <- function(param, temper, ...)
   {
-    synlikEval(object, param, nsim, multicore = FALSE, cluster = NULL, temper = temper, ...)$logLik
+    slik(object, param, nsim, multicore = FALSE, cluster = NULL, temper = temper, ...)
   }
   
   # Calling general maximum likelihood method
-  covar <- initCov.ml(likfun = likfun, 
-                      initpar = initpar, 
-                      initcov = initcov, 
+  covar <- initCov.ml(likFun = likFun, 
+                      initPar = initPar, 
+                      initCov = initCov, 
                       np = np, 
                       nsim = nsim, 
-                      priorfun = priorfun,
+                      priorFun = priorFun,
                       multicore = multicore, 
                       ncores = ncores, 
                       cluster = cluster, 
@@ -30,7 +30,7 @@ initCov.sml <- function(object, initpar, initcov, np, nsim, priorfun = NULL,
                       verbose = verbose,
                       ...)
   
-  rownames(covar) <- colnames(covar) <- names( object@param[ diag(initcov) > 0 ] )
+  rownames(covar) <- colnames(covar) <- names( object@param[ diag(initCov) > 0 ] )
   
   return( covar )
 }

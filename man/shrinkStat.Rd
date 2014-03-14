@@ -2,8 +2,8 @@
 \alias{shrinkStat}
 \title{Creates a summaries function using ridge regression or lasso}
 \usage{
-  shrinkStat(object, nsim, upper, lower, type = "ridge",
-    verbose = TRUE, ...)
+  shrinkStat(object, nsim, mu, sigma, type = "ridge",
+    constr = list(), clean = TRUE, verbose = TRUE, ...)
 }
 \arguments{
   \item{object}{An object of class "synlik".}
@@ -11,13 +11,11 @@
   \item{nsim}{Number of summary statistics to be
   simulated.}
 
-  \item{upper}{Vector giving the upper limit of the
-  hypercube where the statistics will be simulated
-  uniformly.}
+  \item{mu}{mean around which the parameters will be
+  simulated.}
 
-  \item{lower}{Vector giving the upper limit of the
-  hypercube where the statistics will be simulated
-  uniformly.}
+  \item{sigma}{covariance matrix used to simulate the
+  parameters.}
 
   \item{...}{even more additional arguments to be passed to
   object@simulator and object@summaries.}

@@ -40,13 +40,12 @@ Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic syste
 }
 \examples{
 #### Create synlik object
-ricker_sl <- new("synlik",
-                 simulator = rickerSimul,
-                 summaries = rickerStats,
-                 param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
-                 extraArgs = list("nObs" = 50, "nBurn" = 50),
-                 plotFun = function(input, ...){
-                             plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+ricker_sl <- synlik(simulator = rickerSimul,
+                    summaries = rickerStats,
+                    param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
+                    extraArgs = list("nObs" = 50, "nBurn" = 50),
+                    plotFun = function(input, ...){
+                               plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
                             }
 )
 
@@ -70,12 +69,12 @@ slik(ricker_sl,
      nsim    = 1e3)
 
 #### Plotting a slice of the log-Likelihood possibly using multiple cores
-slice.synlik(object = ricker_sl, 
-             ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
-                           "logPhi" = seq(2, 2.6, by = 0.01),
-                           "logSigma" = seq(-2, -0.5, by = 0.01)), 
-             param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
-             nsim = 500, multicore = F, ncores = 4)
+slice(object = ricker_sl, 
+      ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
+                    "logPhi" = seq(2, 2.6, by = 0.01),
+                    "logSigma" = seq(-2, -0.5, by = 0.01)), 
+      param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
+      nsim = 500, multicore = F, ncores = 4)
 
 #### MCMC estimation possibly using multiple cores
 set.seed(4235)

@@ -47,29 +47,51 @@
 }
 
 ################
-#' Simulates from the Ricker map
+########
+#' Simulates from the ricker model
 #' 
-#' @param nObs Length of each simulated time serie.
+#' @description Simulator for the stochastic Ricker model, as described by Wood (2010). The observations are Y_t ~ Pois(Phi * N_t),
+#'              and the dynamics of the hidden state are given by N_t = r * N_\{t-1\} * exp( -N_\{t-1\} + e_t ), where e_t ~ N(0, Sigma^2).
+#' 
+#' @param param vector of log-parameters: logR, logSigma, logPhi. Alternatively a matrix \code{nsim} by 3 were each row is
+#'              a different parameter vector.
 #' @param nsim Number of simulations from the model.
-#' @param A vector of length 4 or a matrix of size nsim by 4.
-#'        If param is a vector each of the nsim simulations will use the same parameters, if it's a matrix the i-th simulation
-#'        will use the i-th row of param as parameters.                    
-#' @param extraArgs Only needed for compatibility with the "synlik" package.                 
-#' @param nBurn Number of initial steps to be discarded 
-#'        before saving the following nObs steps.                     
-#' @param randInit If TRUE the initial values of each of the nsim run will be simulated using runif(nsim, 0, 1),
-#'                 if FALSE each of the nsim simulations will start from initVal.                    
-#' @param initVal If randInit == FALSE each of the nsim simulations will start from this value.  
-#' @param ... Only needed for compatibility with the "synlik" package.
-#' @return A matrix of size nsim by nObs where each row is a trajectory simulated from the model.             
-#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>   
-#' @export
+#' @param extraArgs A named list of additional arguments: \itemize{
+#'  \item{\code{nObs} = Length of each simulated time series.}
+#'  \item{\code{nBurn} = Number of initial steps to be discarded before saving the following \code{nObs} steps.}
+#'  \item{\code{randInit} = if \code{TRUE} (default) the initial state N0 is \code{runif(0, 1)}, otherwise it is equal to \code{extraArgs$initVal}.}
+#'  \item{\code{initVal} = initial value N0, used only if \code{extraArgs$randInit == TRUE}.}
+#' } 
+#'
+#' @param ... Need for compatibility with \code{synlik}, but not used.
+#'
+#' @return A matrix \code{nsim} by \code{nObs}, where each row is a simulated path.
 #' 
-rickerSimul <- function(param, nsim, extraArgs, randInit = TRUE, initVal = 1.0, ...)
+#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010. \cr \cr       
+#' @author Simon Wood and Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @seealso \link{ricker_sl}
+#' @examples
+#' 
+#' tmp <- rickerSimul(c(3.8, -1.2, 2.3), nsim = 2, extraArgs = list("nObs" = 50, "nBurn" = 200))
+#' matplot(t(tmp), type = 'l', ylab = "Y", xlab = "Time")
+#' 
+#' parMat <- rbind(c(3.8, -1.2, 2.3),  # Chaotic
+#'                 c(2.5, -1.2, 2.3))  # Not Chaotic
+#'                 
+#' par(mfrow = c(2, 1))
+#' tmp <- rickerSimul(parMat, nsim = 2, extraArgs = list("nObs" = 50, "nBurn" = 200))
+#' plot(tmp[1, ], type = 'l', ylab = "Y", xlab = "Time")
+#' plot(tmp[2, ], type = 'l', ylab = "Y", xlab = "Time")
+#' @export
+rickerSimul <- function(param, nsim, extraArgs, ...)
 {
   if( !all( c("nObs", "nBurn") %in% names(extraArgs) ) ) stop("extraArgs should contain nBurn and nObs")
   nBurn <- extraArgs$nBurn
   nObs <- extraArgs$nObs
+  
+  if( is.null(extraArgs$randInit) ) randInit = TRUE else randInit <- extraArgs$randInit
+  
+  if( is.null(extraArgs$initVal) ) initVal = 1.0 else initVal <- extraArgs$initVal
   
   if( !is.matrix(param) ) param <- matrix(param, 1, length(param))
   
@@ -80,15 +102,35 @@ rickerSimul <- function(param, nsim, extraArgs, randInit = TRUE, initVal = 1.0, 
 ########
 #' Simulates from the blowfly model
 #' 
-#' @param nObs Length of each simulated time serie.
+#' @description Simulator for the blowfly model proposed by Wood (2010).
+#' 
+#' @param param vector of log-parameters: delta, P, N0, var.p, tau and var.d. The interpretation of these parameters is
+#'              described in Wood (2010).
 #' @param nsim Number of simulations from the model.
-#' @param A vector of length 2 or a matrix of size nsim by 2.
-#'        If param is a vector each of the nsim simulations will use the same parameters, if it's a matrix the i-th simulation
-#'        will use the i-th row of param as parameters. 
-#' @param extraArgs Only needed for compatibility with the "synlik" package.                   
-#' @param nBurn Number of initial steps to be discarded before saving the following nObs steps.               
-#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com> and Simon Wood.
+#' @param extraArgs A named list of additional arguments: \itemize{
+#'  \item{\code{nObs} = Length of each simulated time series.}
+#'  \item{\code{nBurn} = Number of initial steps to be discarded before saving the following \code{nObs} steps.}
+#'  \item{\code{steps} = Positive integer. If \code{steps == n} the observations correspond to \code{n} time steps.} 
+#' } 
+#' @param ... Need for compatibility with \code{synlik}, but not used.
+#'
+#' @return A matrix \code{nsim} by \code{nObs}, where each row is a simulated path.
+#' 
+#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010. \cr \cr
+#'              Brillinger, D. R., J. Guckenheimer, P. Guttorp, and G. Oster. 1980. 
+#'              Empirical modelling of population time series data: the case of age and density dependent 
+#'              vital rates. Lectures on Mathematics in the Life Sciences13:65-90.  \cr \cr
+#'              Nicholson, A. J. 1957. The self-adjustment of populations to change. 
+#'              Cold Spring Harbor Symposia on Quantitative Biology22:153-173.        
+#' @author Simon Wood and Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @seealso \link{blow_sl}
+#' @examples
+#' tmp <- blowSimul(param = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ), 
+#'                  nsim = 2, 
+#'                  extraArgs = list("nObs" = 200, "nBurn" = 1000, "steps" = 2))
+#' matplot(t(tmp), type = 'l', ylab = "Y", xlab = "Time")
 #' @export
+
 blowSimul <- function(param, nsim, extraArgs, ...)
 {
   if( !is.vector(param) ) param <- as.vector(param)

@@ -42,6 +42,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 ### Class Definition
 #' \code{synlik-class}
 #' 
+#' @usage{synlik(...)}
 #' @description{ Basic class for simulation-based approximate inference using Synthetic Likelihood methods.  }
 #'
 #' \section{Slots}{
@@ -65,12 +66,12 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
 #' @examples
 #' #### Create Object
-#' ricker_sl <- new("synlik",
-#'                  simulator = rickerStats,
-#'                  summaries = wood2010,
-#'                  param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
-#'                  extraArgs = list("nObs" = 50, "nBurn" = 50),
-#'                  plotFun = function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+#' ricker_sl <- synlik(simulator = rickerStats,
+#'                     summaries = wood2010,
+#'                     param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
+#'                     extraArgs = list("nObs" = 50, "nBurn" = 50),
+#'                     plotFun = function(input, ...) 
+#'                                 plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
 #' )
 #'  
 #' # Simulate from the object
@@ -100,6 +101,18 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
                      
                      validity = .check.synlik
 )
+
+#' Constructor for synlik class
+#' @rdname synlik-class
+synlik <- function(...)
+{
+  # Expanding arguments and adding "synlik" class
+  arg <- c("synlik", as.list(match.call(expand.dots = TRUE))[-1])
+  
+  do.call("new", arg)
+}
+
+
 
 
 

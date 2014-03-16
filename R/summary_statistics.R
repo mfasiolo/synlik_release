@@ -7,6 +7,24 @@
 ##########################
 ######## INDIVIDUAL SUMMARY STATISTICS
 ##########################
+#' Estimate auto-covariances for multiple datasets.
+#' 
+#' @description Function that, give time series data, transforms them into auto-covariances with different lags.
+#'              
+#' @param x a matrix. Each column contains a replicate series.
+#' @param max.lag How many lags to use.    
+#' 
+#' @return a matrix where each column contains the coefficients for a different replicate. The first coefficient
+#'         corresponds to lag == 0, hence it is the variance, the second is the covariance one step ahead and so 
+#'         on.
+#' @author Simon N. Wood, maintainer Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @rdname slAcf
+#' @export
+#' @examples
+#' library(synlik)
+#' set.seed(10)
+#' x <- matrix(runif(1000),100,10)
+#' acf <- sl.acf(x)
 
 slAcf <- function(x, max.lag=10) {
   ## `x' is a matrix containing replicate simulations in its columns.
@@ -23,8 +41,53 @@ slAcf <- function(x, max.lag=10) {
   acf[acf == NAcode] <- NA
   acf
   
-} ## end of slAcf
+} 
 
+#' Estimate non-linear autoregressive coefficients
+#' 
+#' @description Function that, give time series data, transforms them into summary statistics
+#'              using polynomial autoregression.
+#'              
+#' @param x a matrix. Each column contains a replicate series.
+#' @param lag vector of lags, for rhs terms.
+#' @param power vector of powers, for rhs terms.       
+#' 
+#' @return a matrix where each column contains the coefficients for a different replicate.
+#' @author Simon N. Wood, maintainer Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @rdname nlar
+#' @export
+#' @examples
+#'   library(synlik)
+#'   set.seed(10)
+#'   x <- matrix(runif(200),100,2)
+#'   beta <- nlar(x,lag=c(1,1),power=c(1,2))
+#'   y <- x[,1]
+#'   y <- y - mean(y)
+#'   z <- y[1:99];y <- y[2:100]
+#'   lm(y~z+I(z^2)-1)
+#'   beta
+#'   
+#'   ## NA testing
+#'   x[5,1] <- x[45,2] <- NA
+#'   beta <- nlar(x,lag=c(1,1),power=c(1,2))
+#'   y <- x[,1]
+#'   y <- y - mean(y,na.rm=TRUE)
+#'   z <- y[1:99];y <- y[2:100]
+#'   lm(y~z+I(z^2)-1)
+#'   beta
+#'   
+#'   ## higher order...
+#'   set.seed(10)
+#'   x <- matrix(runif(100),100,2)
+#'   beta <- nlar(x,lag=c(6,6,6,1,1),power=c(1,2,3,1,2))
+#'   k <- 2
+#'   y <- x[,k]
+#'   y <- y - mean(y)
+#'   ind <- (1+6):100
+#'   y6 <- y[ind-6];y1 <- y[ind-1];y <- y[ind]
+#'   beta0 <- coef(lm(y~y6+I(y6^2)+I(y6^3)+y1+I(y1^2)-1))
+#'   as.numeric(beta[,k]);beta0;beta0-as.numeric(beta[,k])
+  
 nlar <- function(x,lag,power) {
   ## relatively efficient polynomial autoregression for multiple reps.
   ## each column of `x' is a replicate. 
@@ -42,8 +105,35 @@ nlar <- function(x,lag,power) {
   beta <- matrix(oo$beta,length(lag),ncol(x))
   
   beta
-} ## end of nlar
+} 
 
+#' Summarize marginal distribution of (differenced) series.
+#' 
+#' @description Summarizes (difference) distribution of replicate series, by regressing ordered 
+#'              differenced series on a reference series (which might correspond to observed data).
+#'              
+#' @param x a matrix. Each column contains a replicate series.
+#' @param z vector of lags, for rhs terms.    
+#' @param np maximum power on rhs of regression.
+#' @param diff order of differencing (zero for none).
+#' 
+#' @return a matrix where each column contains the coefficients for a different replicate.
+#' @author Simon N. Wood, maintainer Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
+#' @rdname orderDist
+#' @export
+#' @examples
+#' library(synlik)
+#' set.seed(10)
+#' n <- 100;nr <- 3
+#' x <- matrix(runif(n*nr),n,nr)
+#' z <- runif(n)
+#' beta <- order.dist(x,z,np=3,diff=1)
+#' 
+#' zd <- z;xd <- x[,3]
+#' zd <- diff(zd,1);xd <- diff(xd,1)
+#' zd <- sort(zd);zd <- zd - mean(zd)
+#' xd <- sort(xd);xd <- xd - mean(xd)
+#' lm(xd~zd+I(zd^2)+I(zd^3)-1)
 
 orderDist <- function(x,z,np=3,diff=1) {
   ## Routine to obtain coefficients summarizing distribution of (differenced) columns
@@ -57,7 +147,7 @@ orderDist <- function(x,z,np=3,diff=1) {
   
   beta <- matrix(oo$beta,np,ncol(x))
   
-} ## end of orderDist
+} 
 
 
 

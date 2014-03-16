@@ -1,45 +1,27 @@
 \name{nlar}
 \alias{nlar}
-%- Also NEED an `\alias' for EACH other topic documented here.
-\title{Turn time series into stats}
-\description{
-Polynomial autoregression for multiple reps.
-} %- end description
-
+\title{Estimate non-linear autoregressive coefficients}
 \usage{
-nlar(x,lag,power)
+  nlar(x, lag, power)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
+  \item{x}{a matrix. Each column contains a replicate
+  series.}
 
-\item{x}{a matrix. Each column contains a replicate series. }
+  \item{lag}{vector of lags, for rhs terms.}
 
-\item{lag}{array of lags, for rhs terms.}
-
-\item{power}{array of powers, for rhs terms.}
-
+  \item{power}{vector of powers, for rhs terms.}
 }
-
-\details{ 
- Experimental
-
+\value{
+  a matrix where each column contains the coefficients for
+  a different replicate.
 }
-\value{Currently a matrix of the coefs. per series.
+\description{
+  Function that, give time series data, transforms them
+  into summary statistics using polynomial autoregression.
 }
-\references{
-
-
-\url{http://www.maths.bath.ac.uk/~sw283/}
-}
-\author{ Simon N. Wood \email{simon.wood@r-project.org}}
-
-
-\seealso{  
-order.dist, sl.acf
-}
-
 \examples{
-  library(sl)
+library(synlik)
   set.seed(10)
   x <- matrix(runif(200),100,2)
   beta <- nlar(x,lag=c(1,1),power=c(1,2))
@@ -69,13 +51,9 @@ order.dist, sl.acf
   y6 <- y[ind-6];y1 <- y[ind-1];y <- y[ind]
   beta0 <- coef(lm(y~y6+I(y6^2)+I(y6^3)+y1+I(y1^2)-1))
   as.numeric(beta[,k]);beta0;beta0-as.numeric(beta[,k])
-  
 }
-
-
-\keyword{models} \keyword{smooth} \keyword{regression}%-- one or more ..
-
-
-
-
+\author{
+  Simon N. Wood, maintainer Matteo Fasiolo
+  <matteo.fasiolo@gmail.com>.
+}
 

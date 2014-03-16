@@ -32,11 +32,10 @@ These are Nisbet and Gurney's runs 2 and 3, respectively.
 \value{matrix of replicate data series
 }
 \references{
-
-
-\url{http://www.maths.bath.ac.uk/~sw283/}
+Alexander J Nicholson. An outline of the dynamics of animal populations. Australian
+Journal of Zoology, 2(1):9–65, 1954.
 }
-\author{ Simon N. Wood \email{simon.wood@r-project.org}}
+\author{ Simon N. Wood, maintainer Matteo Fasiolo <matteo.fasiolo@@gmail.com>}
 
 
 \seealso{  
@@ -44,7 +43,7 @@ blowfly
 }
 
 \examples{
-  library(sl)
+  library(synlik)
   data(bf1)
   data(bf2)
   data(bf3)
@@ -61,7 +60,6 @@ blowfly
 }
 
 
-\keyword{models} \keyword{smooth} \keyword{regression}%-- one or more ..
 
 
 

@@ -1,8 +1,11 @@
 \name{synlik-class}
+\alias{synlik}
 \alias{synlik-class}
 \title{\code{synlik-class}}
 \usage{
-  .synlik(...)
+
+
+  synlik(...)
 }
 \description{
   Basic class for simulation-based approximate inference
@@ -31,15 +34,17 @@
   \item{plotFun}{Function that will be used to plot
   \code{object@data}. Prototype should be \code{fun(x,
   ...)} (\code{function}).} }
+
+  Constructor for synlik class
 }
 \examples{
 #### Create Object
-ricker_sl <- new("synlik",
-                 simulator = rickerStats,
-                 summaries = wood2010,
-                 param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
-                 extraArgs = list("nObs" = 50, "nBurn" = 50),
-                 plotFun = function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+ricker_sl <- synlik(simulator = rickerStats,
+                    summaries = wood2010,
+                    param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
+                    extraArgs = list("nObs" = 50, "nBurn" = 50),
+                    plotFun = function(input, ...)
+                                plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
 )
 
 # Simulate from the object

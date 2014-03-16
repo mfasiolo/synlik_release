@@ -22,7 +22,7 @@
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>                         
 #' @export 
 
-slice.synlik <- function(object, ranges, nsim, param = object@param, pairs = FALSE, draw = TRUE, trans = NULL, 
+slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, draw = TRUE, trans = NULL, 
                          multicore = FALSE, ncores = detectCores() - 1, cluster = NULL, ...)
 {
   if(!is(object, "synlik")) stop("object has to be of class \"synlik\" ")

@@ -1,9 +1,3 @@
-/* the models */
-
-void ricker(double *n,double *theta,double *e,int *burn_in,int *n_t, int *n_reps,double *n0);
-void blowC(double *n,double *theta,double *e,double *e1,int *burn_in,int *n_t, int *n_reps);
-void bup_par(double *n,double *theta,double *e,int *burn_in,int *n_t, int *n_reps);
-
 /* The data -> statistics routines */
 
 void slacf(double *acf,double *x,int *n,int *n_reps,int *max_lag,double *NAcode,int *correlation);

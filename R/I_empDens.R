@@ -2,15 +2,15 @@
 .empDens <- function(y, X, saddle, decay, tol = 1e-6, log = TRUE)
 {
   
-  # If saddle == TRUE returns saddlepoint density, otherwise a normal density
-  if(saddle == TRUE)
-  {
-    
-    tmp <- dsaddle(y = y, X = X, tol = tol, decay = decay, log = TRUE)
-    llk <- tmp$llk
-    mix <- tmp$mix
-    
-  } else  {
+#   # If saddle == TRUE returns saddlepoint density, otherwise a normal density
+#   if(saddle == TRUE)
+#   {
+#     
+#     tmp <- dsaddle(y = y, X = X, tol = tol, decay = decay, log = TRUE)
+#     llk <- tmp$llk
+#     mix <- tmp$mix
+#     
+#   } else  {
     
     tmp <- robCov( t(X) )
     
@@ -21,7 +21,7 @@
     llk <- -rss/2 - tmp$half.ldet.V
     mix <- 0
     
-  }
+#   }
   
   list("logLik" = ifelse(log, llk, exp(llk)), "mix" = mix)
 }

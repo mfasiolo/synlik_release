@@ -10,7 +10,7 @@
 #' @aliases rickerStats ricker_smcmc
 #' @seealso \link{rickerSimul}
 #' @export
-#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010.
+#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.
 #' @author Simon Wood and Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
 #' @examples
 #' data(ricker_sl)

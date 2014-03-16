@@ -17,7 +17,7 @@
 #' @param ncores  Number of cores to use if \code{multicore == TRUE}.
 #' @param cluster An object of class \code{c("SOCKcluster", "cluster")}. This allowes the user to pass her own cluster,
 #'                which will be used if \code{multicore == TRUE}. The user has to remember to stop the cluster. 
-#' @param ... additional arguments to be passed to synlikEval, see \code{\link{synlikEval}}.
+#' @param ... additional arguments to be passed to \code{slik()}, see \code{\link{slik}}.
 #' @return Either a vector or matrix of log-synthetic likelihood estimates, depending on whether \code{length(parNames) ==} 1 or 2.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>                         
 #' @export 

@@ -13,8 +13,7 @@
 #' @return NULL
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>  
 #' @seealso \code{\link{synlik-class}}, \code{\link{plot}}.
-#' @method plot synlik
-#' 
+#' @aliases plot,synlik,missing-method
 #' @export
 #' @examples
 #' data(ricker_sl)

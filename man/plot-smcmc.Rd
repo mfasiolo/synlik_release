@@ -1,8 +1,9 @@
 \name{plot.smcmc}
+\alias{plot,smcmc,missing-method}
 \alias{plot.smcmc}
 \title{Method for plotting an object of class \code{smcmc}.}
 \usage{
-  \method{plot}{smcmc} (x, trans = NULL, addPlot1 = NULL,
+  plot.smcmc(x, trans = NULL, addPlot1 = NULL,
     addPlot2 = NULL, ...)
 }
 \arguments{

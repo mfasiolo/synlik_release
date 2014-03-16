@@ -48,7 +48,7 @@ slik(ricker_sl, param = c(3.8, -1.2, 2.3), nsim = 500)
 }
 \references{
   Simon N Wood. Statistical inference for noisy nonlinear
-  ecological dynamic systems. Nature, 466(7310):1102–1104,
+  ecological dynamic systems. Nature, 466(7310):1102--1104,
   2010.
 }
 

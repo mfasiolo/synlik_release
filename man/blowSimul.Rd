@@ -40,7 +40,7 @@ matplot(t(tmp), type = 'l', ylab = "Y", xlab = "Time")
 }
 \references{
   Simon N Wood. Statistical inference for noisy nonlinear
-  ecological dynamic systems. Nature, 466(7310):1102–1104,
+  ecological dynamic systems. Nature, 466(7310):1102--1104,
   2010. \cr \cr Brillinger, D. R., J. Guckenheimer, P.
   Guttorp, and G. Oster. 1980.  Empirical modelling of
   population time series data: the case of age and density

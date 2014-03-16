@@ -1,5 +1,6 @@
 \name{continue.smcmc}
 \alias{continue.smcmc}
+\alias{plot,smcmc,missing-method}
 \title{Continuing estimation of an \code{smcmc} object.}
 \usage{
   continue.smcmc(object, niter = object@niter,
@@ -34,7 +35,7 @@
   \item{control}{see \code{\link{smcmc-class}}.}
 
   \item{...}{additional arguments to be passed to
-  synlikEval, see \code{\link{synlikEval}}.}
+  \code{slik()}, see \code{\link{slik}}.}
 }
 \value{
   An object of the same class as \code{object}, where the

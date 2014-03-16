@@ -67,7 +67,7 @@
 #'
 #' @return A matrix \code{nsim} by \code{nObs}, where each row is a simulated path.
 #' 
-#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010. \cr \cr       
+#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010. \cr \cr       
 #' @author Simon Wood and Matteo Fasiolo <matteo.fasiolo@@gmail.com>.
 #' @seealso \link{ricker_sl}
 #' @examples
@@ -116,7 +116,7 @@ rickerSimul <- function(param, nsim, extraArgs, ...)
 #'
 #' @return A matrix \code{nsim} by \code{nObs}, where each row is a simulated path.
 #' 
-#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010. \cr \cr
+#' @references  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010. \cr \cr
 #'              Brillinger, D. R., J. Guckenheimer, P. Guttorp, and G. Oster. 1980. 
 #'              Empirical modelling of population time series data: the case of age and density dependent 
 #'              vital rates. Lectures on Mathematics in the Life Sciences13:65-90.  \cr \cr

@@ -35,7 +35,7 @@ slik(blow_sl,
 }
 \references{
   Simon N Wood. Statistical inference for noisy nonlinear
-  ecological dynamic systems. Nature, 466(7310):1102–1104,
+  ecological dynamic systems. Nature, 466(7310):1102--1104,
   2010.
 }
 \seealso{

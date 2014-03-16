@@ -20,13 +20,13 @@
 #' @param ncores   see \code{\link{smcmc-class}}.
 #' @param cluster see \code{\link{smcmc}}. 
 #' @param control see \code{\link{smcmc-class}}. 
-#' @param ... additional arguments to be passed to synlikEval, see \code{\link{synlikEval}}.
+#' @param ... additional arguments to be passed to \code{slik()}, see \code{\link{slik}}.
 #'
 #' @return An object of the same class as \code{object}, where the results of the estimation have been updated.
 #' 
 #' @seealso \code{\link{smcmc-class}}, \code{\link{smcmc}}, \code{\link{continue}}.
 #' 
-#' @exportMethod continue smcmc
+#' @aliases plot,smcmc,missing-method
 #' @examples
 #' # For an example see help("smcmc-class").
 #' @rdname continue-smcmc

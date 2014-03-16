@@ -33,7 +33,7 @@ These are Nisbet and Gurney's runs 2 and 3, respectively.
 }
 \references{
 Alexander J Nicholson. An outline of the dynamics of animal populations. Australian
-Journal of Zoology, 2(1):9–65, 1954.
+Journal of Zoology, 2(1):9--65, 1954.
 }
 \author{ Simon N. Wood, maintainer Matteo Fasiolo <matteo.fasiolo@@gmail.com>}
 

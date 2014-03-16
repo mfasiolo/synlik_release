@@ -13,7 +13,7 @@
 #'            In general I would avoid using it and including \code{object@@extraArgs} everything they need.
 #' @return The estimated value of the synthetic log-likelihood at \code{param}.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>    
-#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010.
+#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.
 #' @examples
 #' data(ricker_sl)
 #' set.seed(643)

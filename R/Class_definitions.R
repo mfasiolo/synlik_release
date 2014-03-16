@@ -62,7 +62,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #'  
 #' @name synlik-class
 #' @rdname synlik-class
-#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010.
+#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>
 #' @examples
 #' #### Create Object

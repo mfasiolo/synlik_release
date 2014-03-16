@@ -45,7 +45,7 @@
   The user has to remember to stop the cluster.}
 
   \item{...}{additional arguments to be passed to
-  synlikEval, see \code{\link{synlikEval}}.}
+  \code{slik()}, see \code{\link{slik}}.}
 }
 \value{
   Either a vector or matrix of log-synthetic likelihood

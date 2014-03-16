@@ -53,7 +53,7 @@ plot(tmp[2, ], type = 'l', ylab = "Y", xlab = "Time")
 }
 \references{
   Simon N Wood. Statistical inference for noisy nonlinear
-  ecological dynamic systems. Nature, 466(7310):1102–1104,
+  ecological dynamic systems. Nature, 466(7310):1102--1104,
   2010. \cr \cr
 }
 \seealso{

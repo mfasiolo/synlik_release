@@ -17,4 +17,6 @@
 
 .onLoad <- function(lib,pkg) {
    library.dynam("synlik", pkg, lib)
+   tools::vignetteEngine("knitr", weave = vweave, tangle = vtangle,
+                         pattern = "[.]Rmd$", package = "knitr")
 }

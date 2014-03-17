@@ -4,8 +4,25 @@
 
 #####################################################################################################################
 
+#' Dummy class
+#' @description Class unions for internal use only
+#' @name numericOrNULL-class
+#' @rdname numericOrNULL-class
+#' @exportClass numericOrNULL
 setClassUnion("numericOrNULL", c("numeric", "NULL"))
+
+#' Dummy class
+#' @description Class unions for internal use only
+#' @name ANYOrNULL-class
+#' @rdname ANYOrNULL-class
+#' @exportClass ANYOrNULL
 setClassUnion("ANYOrNULL", c("ANY", "NULL"))
+
+#' Dummy class
+#' @description Class unions for internal use only
+#' @name functionOrNULL-class
+#' @rdname functionOrNULL-class
+#' @exportClass functionOrNULL
 setClassUnion("functionOrNULL", c("function", "NULL"))
 
 ##################################

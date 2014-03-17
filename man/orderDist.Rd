@@ -29,7 +29,7 @@ set.seed(10)
 n <- 100;nr <- 3
 x <- matrix(runif(n*nr),n,nr)
 z <- runif(n)
-beta <- order.dist(x,z,np=3,diff=1)
+beta <- orderDist(x,z,np=3,diff=1)
 
 zd <- z;xd <- x[,3]
 zd <- diff(zd,1);xd <- diff(xd,1)

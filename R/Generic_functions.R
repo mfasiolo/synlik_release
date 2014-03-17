@@ -18,7 +18,7 @@
 #' @seealso For examples, see \code{\link{smcmc-class}}.
 #' 
 #' @export
-#' @genericMethods 
+#' @docType methods
 #' @rdname continue-generic
 
 setGeneric('continue', function(object, ...) standardGeneric("continue"))

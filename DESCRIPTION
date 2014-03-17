@@ -9,10 +9,11 @@ Description: Framework to perform synthetic likelihood inference
     for models where the likelihood function is unavailable or
     intractable.
 License: GPL (>=2)
-Imports:
+Depends: 
     Rcpp (>= 0.10.4),
     RcppArmadillo,
-    methods,
+    methods
+Imports:
     graphics,
     Matrix,
     compiler,

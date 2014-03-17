@@ -143,8 +143,8 @@ blowSimul <- function(param, nsim, extraArgs, ...)
   
   totStep <- nBurn + nObs * steps
   
-  noise1 <- matrix(ilogistic(runif(nsim * totStep)), totStep, nsim)
-  noise2 <- matrix(ilogistic(runif(nsim * totStep)), totStep, nsim)
+  noise1 <- matrix(.ilogistic(runif(nsim * totStep)), totStep, nsim)
+  noise2 <- matrix(.ilogistic(runif(nsim * totStep)), totStep, nsim)
   
   simul <- .blowfly(theta = exp(param), 
                     lu = noise1, 

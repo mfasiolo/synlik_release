@@ -2,46 +2,17 @@
 ### Method to continue MCMC estimation of a synMCMC object
 #########
 
-##############################################################
-#' Continuing estimation of an \code{smcmc} object.
-#'
-#' Continues MCMC estimation of an object of class \code{smcmc}. All input parameters are defaulted to the corresponding
-#' slots in the input object, with the exception of cluster. The chain restarts were it ended, burn-in is set to zero, the
-#' same prior (if any) is used. 
-#'
-#' @param object An object representing the results of an estimation procedure which we wish to continue.
-#'               For example it might represents and MCMC chain.
-#' @param niter  Number of additional MCMC iterations requested. The output chain will have length object@niter + niter.
-#' @param nsim  see \code{\link{smcmc-class}}.
-#' @param propCov see \code{\link{smcmc-class}}.
-#' @param targetRate see \code{\link{smcmc-class}}.
-#' @param recompute see \code{\link{smcmc-class}}.             
-#' @param multicore  see \code{\link{smcmc-class}}.
-#' @param ncores   see \code{\link{smcmc-class}}.
-#' @param cluster see \code{\link{smcmc}}. 
-#' @param control see \code{\link{smcmc-class}}. 
-#' @param ... additional arguments to be passed to \code{slik()}, see \code{\link{slik}}.
-#'
-#' @return An object of the same class as \code{object}, where the results of the estimation have been updated.
-#' 
-#' @seealso \code{\link{smcmc-class}}, \code{\link{smcmc}}, \code{\link{continue}}.
-#' 
-#' @aliases continue,smcmc,missing-method
-#' @examples
-#' # For an example see help("smcmc-class").
-#' @rdname continue-smcmc
-
-continue.smcmc <- function(object, 
-                           niter = object@niter,
-                           nsim = object@nsim,
-                           propCov = object@propCov, 
-                           targetRate = object@targetRate,
-                           recompute = object@recompute,
-                           multicore = object@multicore,
-                           ncores = object@ncores,
-                           cluster = NULL,
-                           control = object@control,
-                           ...)
+.continue.smcmc <- function(object, 
+                            niter = object@niter,
+                            nsim = object@nsim,
+                            propCov = object@propCov, 
+                            targetRate = object@targetRate,
+                            recompute = object@recompute,
+                            multicore = object@multicore,
+                            ncores = object@ncores,
+                            cluster = NULL,
+                            control = object@control,
+                            ...)
 {
   if(!is(object, "smcmc")) stop("To use mcmc you need an object of class \"smcmc\"")
   
@@ -82,6 +53,16 @@ continue.smcmc <- function(object,
   ))
 }
 
+##############################################################
+#' @details When \code{is("smcmc", object) == TRUE}  continues MCMC estimation of an object of class \code{smcmc}. All input parameters are defaulted to the corresponding
+#' slots in the input object, with the exception of cluster. The chain restarts were it ended, burn-in is set to zero, the
+#' same prior (if any) is used.
+#' @aliases continue,smcmc,missing-method
+#' @rdname continue-generic
+#' 
 setMethod("continue", 
           signature = signature(object = "smcmc"), 
-          definition = continue.smcmc)
+          definition = .continue.smcmc)
+
+
+

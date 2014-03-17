@@ -24,7 +24,7 @@
 library(synlik)
 set.seed(10)
 x <- matrix(runif(1000),100,10)
-acf <- sl.acf(x)
+acf <- slAcf(x)
 }
 \author{
   Simon N. Wood, maintainer Matteo Fasiolo

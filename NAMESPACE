@@ -16,9 +16,7 @@ importFrom(stats, coef)
 importFrom(stats, vcov)
 importFrom(stats, confint)
 
-<<<<<<< HEAD
-=======
 importFrom(graphics, plot)
 
 importFrom(Matrix, nearPD)
->>>>>>> e0565f9... More fixes
+

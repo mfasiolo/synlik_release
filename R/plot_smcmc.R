@@ -54,7 +54,6 @@
 #' 
 #' @seealso \code{\link{smcmc-class}}, \code{\link{plot}}.
 #' @aliases plot.smcmc plot-smcmc plot,smcmc,missing-method
-#' @method plot smcmc missing
 #' @examples
 #' data(ricker_smcmc)
 #' 

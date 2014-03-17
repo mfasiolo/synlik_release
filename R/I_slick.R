@@ -49,7 +49,7 @@
       coresSchedule, 
       function(input, ...)
       {
-        simulate.synlik(object, param = param, nsim = input, stats = TRUE, clean = TRUE, verbose = FALSE, ...)
+        .simulate.synlik(object, param = param, nsim = input, stats = TRUE, clean = TRUE, verbose = FALSE, ...)
       } 
       , ...
     )
@@ -59,7 +59,7 @@
     if(clusterCreated) cluster <- stopCluster(cluster)
     
   } else {
-    simulData <- simulate.synlik(object, param = param, nsim = nsim, stats = TRUE, clean = TRUE, verbose = FALSE, ...) 
+    simulData <- .simulate.synlik(object, param = param, nsim = nsim, stats = TRUE, clean = TRUE, verbose = FALSE, ...) 
   }
   
   if(nrow(simulData) < nsim / 3) warning(paste(nsim - nrow(simulData), "out of", nsim, "statistics vectors", "contain NAs and will not be used"))

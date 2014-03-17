@@ -59,8 +59,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 ### Class Definition
 #' \code{synlik-class}
 #' 
-#' @usage{synlik(...)}
-#' @description{ Basic class for simulation-based approximate inference using Synthetic Likelihood methods.  }
+#' @description Basic class for simulation-based approximate inference using Synthetic Likelihood methods.
 #' 
 #' \section{Slots}{
 #' \describe{

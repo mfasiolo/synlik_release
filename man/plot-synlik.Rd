@@ -1,5 +1,4 @@
-\name{plot}
-\alias{plot}
+\name{plot-synlik}
 \alias{plot,synlik,missing-method}
 \alias{plot-synlik}
 \alias{plot.synlik}

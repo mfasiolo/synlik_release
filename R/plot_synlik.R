@@ -18,9 +18,11 @@
   return( invisible() )
 }
 
-#' Method for plotting an object of class \code{synlik}.
+#' @name plot-synlik
+#' 
+#' @title Method for plotting an object of class \code{synlik}.
 #'
-#' It basically calls the slot \code{object@@plotFun} with input \code{object@@data}, if it has been provided by the user. 
+#' @description It basically calls the slot \code{object@@plotFun} with input \code{object@@data}, if it has been provided by the user. 
 #' Otherwise it tries to use the \code{plot(x = object@@data, y, ...)} generic.
 #'
 #' @param x An object of class \code{synlik}.

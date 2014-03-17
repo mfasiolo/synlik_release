@@ -1,5 +1,4 @@
-\name{plot}
-\alias{plot}
+\name{plot-smcmc}
 \alias{plot,smcmc,missing-method}
 \alias{plot-smcmc}
 \alias{plot.smcmc}

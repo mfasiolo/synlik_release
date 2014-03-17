@@ -39,8 +39,10 @@
 
 
 ##########
-#' Method for plotting an object of class \code{smcmc}.
-#'
+#' @name plot-smcmc
+#' 
+#' @title Method for plotting an object of class \code{smcmc}.
+#' 
 #' @param x An object of class \code{smcmc}.
 #' @param trans Name list or vector containing names of transforms for some parameters (ex: \code{list("par1" = "exp", "par2" = "log")}).
 #'              The transformations will be applied before plotting.

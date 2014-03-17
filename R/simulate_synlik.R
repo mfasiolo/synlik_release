@@ -56,6 +56,7 @@
 #' @aliases simulate-synlik simulate.synlik simulate,synlik-method
 #' @method simulate synlik
 #' @seealso \code{\link{synlik-class}}, \code{\link{simulate}}. 
+#' @rdname simulate-synlik
 #' @examples
 #' data(ricker_sl)
 #' 

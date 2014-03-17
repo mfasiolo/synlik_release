@@ -53,7 +53,7 @@ slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, dra
   if(length(names(param)) == 0) names(param) <- names(object@param)
   if(!is.list(ranges)) stop("ranges has to be a list of named vectors")
   
-  nPar <- length(param)
+  nPar <- length(ranges)
   out <- list()
   
   # Function that will be used by sapply() or clusterApply to evaluate the likelihood
@@ -130,12 +130,12 @@ slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, dra
     if(length(ranges) < 2) stop("You need at least 2 parameters if pairs == TRUE")
     
     # Create combinations of pairs
-    com <- t( combn(nPar, 2) )
+    com <- t( .combn(nPar, 2) )
     
     # Calculate likelihood for each pair
     for(ii in 1:nrow(com))
     {
-      parName <- names(object@param)[com[ii, ]]
+      parName <- names(ranges)[com[ii, ]]
       
       theGrid <- do.call( cbind, expand.grid(ranges[[parName[1]]], ranges[[parName[2]]]) )
       theGrid <- split(t(theGrid), rep(1:nrow(theGrid), each = ncol(theGrid)) )

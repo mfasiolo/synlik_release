@@ -53,7 +53,7 @@
 #' @return If \code{stats == FALSE} the output will that of \code{object@@simulator}, which depends on the simulator used by the user.
 #'         If \code{stats == TRUE} the output will be a matrix where each row is vector of simulated summary statistics.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com> 
-#' @aliases simulate-synlik simulate.synlik simulate,synlik-method
+#' @aliases simulate,synlik-method
 #' @method simulate synlik
 #' @seealso \code{\link{synlik-class}}, \code{\link{simulate}}. 
 #' @rdname simulate-synlik

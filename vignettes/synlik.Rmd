@@ -126,7 +126,8 @@ ricker_sl <- smcmc(ricker_sl,
                    propCov = diag(c(0.1, 0.1, 0.1))^2, 
                    nsim = 500)
 ```
-
+ Notice that `priorFun` returns the log-density of the prior. In this case given that perturbing the log-parameters
+ 
  If we have not reached convergence we can do some more MCMC iterations:
  
 ```{r}
@@ -141,3 +142,160 @@ addline2 <- function(parNam, ...) abline(v = ricker_sl@param[parNam], lwd = 2, l
 plot(ricker_sl, addPlot1 = "addline1", addPlot2 = "addline2")
 ``` 
  were we have added some lines indicating the position of the true parameters.
+ 
+ 
+Blowfly example
+----------------------------
+
+As a more challenging example, let's consider the Blowfly model proposed by Wood (2010):
+$$latex
+N_{t} = R_t + S_t,
+$$
+where
+$$latex
+R_t \sim \text{Pois}(PN_{t-\tau}e^{-\frac{N_{t-\tau}}{N_0}}e_t),
+$$
+represents delayed recruitment process, while:
+$$
+S_t \sim \text{binom}(e^{-\delta\epsilon_t}, N_{t-1}),
+$$
+denotes the adult survival process. Finally $e_t$ and $\epsilon_t$ are independent gamma distributed random variables, with unit means and variances equal to $\sigma_p^2$ and $\sigma_d^2$ respectively. We start by creating a `synlik` object:
+```{r}
+blow_sl <- synlik(simulator = blowSimul,
+                  summaries = blowStats,
+                  param = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
+                  extraArgs = list("nObs" = 200, "nBurn" = 200, "steps" = 1),
+                  plotFun = function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+)
+```
+for more details see `?blow_sl`. As before we simulate data and we store it back into the object:
+```{r}
+blow_sl@data <- simulate(blow_sl)
+blow_sl@extraArgs$obsData <- blow_sl@data
+```
+As for the Ricker example, `blowStats` needs the observed data to calculate the statistics, hence we store it 
+into `extraArgs$obsData`. Notice that this is just a peculiarity of the chosen statistics. 
+
+Then, we can estimate the parameters by adaptive MCMC:
+```{r}
+blow_sl <- smcmc(blow_sl, 
+                 initPar = log( c( "delta" = 0.1, "P" = 8, "N0" = 600, "sig.p" = 0.2, "tau" = 17, "sig.d" = 0.3)  ),
+                 niter = 2000, 
+                 burn = 0,
+                 propCov = diag(rep(0.001, 6)),
+                 nsim = 500, 
+                 prior = function(input){
+                           sum(input) +
+                           dunif(input[4], log(0.01), log(1), log = TRUE) +
+                           dunif(input[6], log(0.01), log(1), log = TRUE)
+                 },
+                 targetRate = 0.15,
+                 multicore = TRUE,
+                 ncores = 2
+)
+```
+We plot the results on the original scale:
+```{r}
+tmpTrans <- rep("exp", 6)
+names(tmpTrans) <- names(blow_sl@param)
+plot(blow_sl, trans = tmpTrans)
+```
+The package includes some of Nicholson's experimental datasets, which can be loaded into the object:
+```{r}
+data(bf1)
+blow_sl@data <- bf1$pop
+blow_sl@extraArgs$obsData <- blow_sl@data
+```
+and then used to estimate the parameters by MCMC.
+
+
+Trait model example
+----------------------------
+
+As another example, let us consider the trait-based model of community dynamics proposed by Jabot (2010).
+The model, its parameters and the summary statistics used are described in the same reference 
+and in the manual of the EasyABC package.
+This time we have to set up the simulator ourself:
+```{r}
+traitSimul <- function(param, nsim, extraArgs, ...)
+{ 
+  if( !is.loaded("EasyABC") ) library("EasyABC") 
+  
+  if(length(param) != 4) stop("Wrong number of parameters")
+  
+  stopifnot( param[3] < 125 || param[3] > -25 )
+  
+  # We have to provide the seed
+  seeds <- sample(1:10000, nsim, replace = FALSE)
+  output <- matrix(NA, nsim, 4)
+
+  # We have to loop in R to get multiple simulations!
+  for(ii in 1:nsim) 
+    output[ii, ] <- trait_model(input=c(seeds[ii], J = 500, exp(param[1:2]), nt = 1, param[3], exp(param[4])))
+  
+  return(output)
+}
+
+```
+`trait_model` simulates the summary statistics directly, so we don't have to specify the `summaries` slot:
+```{r}
+trait_sl <- synlik(simulator = traitSimul,
+                   param = c( logI = 4, logA = 0, h = 15, logsigma = log(1.5) )
+)
+trait_sl@data <- simulate(trait_sl)
+trait_sl@data
+```
+We check the normality of the statistics:
+```{r}
+checkNorm(trait_sl, nsim = 200)
+```
+which looks reasonable.
+This model is quite slow to simulate from, hence using multiple cores can help:
+```{r}
+tim <- proc.time()
+slice(object = trait_sl, 
+      ranges = list("logI" = seq(3, 6, by = 0.2)), 
+      param = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ), 
+      nsim = 100, 
+      draw = FALSE,
+      multicore = FALSE)
+proc.time() - tim
+```
+
+```{r}
+tim <- proc.time()
+slice(object = trait_sl, 
+      ranges = list("logI" = seq(3, 6, by = 0.2)), 
+      param = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ), 
+      nsim = 100, 
+      multicore = TRUE)
+proc.time() - tim
+```
+
+Finally we estimate the parameters by MCMC on multiple cores:
+```{r}
+trait_sl <- smcmc(trait_sl, 
+                  initPar = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ),
+                  niter = 100, 
+                  burn = 0,
+                  priorFun = function(input, ...){ input[3] > -25 && input[3] < 125 } , 
+                  propCov = diag(c(0.1, 0.1, 0.1, 0.1))^2, 
+                  nsim = 100, 
+                  targetRate = 0.2,
+                  multicore = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

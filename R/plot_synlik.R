@@ -31,7 +31,7 @@
 #' @return NULL
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>  
 #' @seealso \code{\link{synlik-class}}, \code{\link{plot}}.
-#' @aliases plot.synlik plot-synlik plot,synlik,missing-method
+#' @aliases plot,synlik,missing-method
 #' @method plot synlik missing
 #' @examples
 #' data(ricker_sl)

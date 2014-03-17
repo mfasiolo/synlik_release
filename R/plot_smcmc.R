@@ -55,7 +55,7 @@
 #' @return NULL
 #' 
 #' @seealso \code{\link{smcmc-class}}, \code{\link{plot}}.
-#' @aliases plot.smcmc plot-smcmc plot,smcmc,missing-method
+#' @aliases plot,smcmc,missing-method
 #' @examples
 #' data(ricker_smcmc)
 #' 

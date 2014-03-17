@@ -16,6 +16,7 @@
 #' @param ncores   see \code{\link{smcmc-class}}.
 #' @param cluster an object of class \code{c("SOCKcluster", "cluster")}. This allowes the user to pass her own cluster,
 #'                which will be used if \code{multicore == TRUE}. The user has to remember to stop the cluster. 
+#' @param control see \code{\link{smcmc-class}}.
 #' @param ... additional arguments to be passed to \code{slik} function, see \code{\link{slik}}.
 #' @return An object of class \code{smcmc}.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>, code for adaptive step from the adaptMCMC package.   
@@ -157,22 +158,23 @@ smcmc <- function(object,
     # (Optionally) save the object to file
     if( !is.null(ctrl$saveFile) && !(ii %% ctrl$saveFreq) ){ 
       save(file = ctrl$saveFile, 
-           .smcmc(object,
-                  initPar = initPar,
-                  niter = as.integer(niter),
-                  nsim =  as.integer(nsim), 
-                  propCov = propCov,
-                  burn = as.integer(burn),
-                  priorFun = priorFun,
-                  targetRate = targetRate,
-                  recompute = recompute,
-                  multicore = multicore,
-                  ncores = as.integer(ncores),
-                  control = control,
-                  
-                  accRate = accept/niter,
-                  chains = mcmcSample,
-                  llkChain = llkChain))
+           new( "smcmc",
+                object,
+                initPar = initPar,
+                niter = as.integer(niter),
+                nsim =  as.integer(nsim), 
+                propCov = propCov,
+                burn = as.integer(burn),
+                priorFun = priorFun,
+                targetRate = targetRate,
+                recompute = recompute,
+                multicore = multicore,
+                ncores = as.integer(ncores),
+                control = control,
+                
+                accRate = accept/niter,
+                chains = mcmcSample,
+                llkChain = llkChain))
     }
     
     # (Optionally) print out intermediate results
@@ -189,21 +191,22 @@ smcmc <- function(object,
   # Close the cluster if it was opened inside this function
   if(multicore && clusterCreated) stopCluster(cluster)
   
-  return( .smcmc(object,
-                 initPar = initPar,
-                 niter = as.integer(niter),
-                 nsim =  as.integer(nsim), 
-                 propCov = propCov,
-                 burn = as.integer(burn),
-                 priorFun = priorFun,
-                 targetRate = targetRate,
-                 recompute = recompute,
-                 multicore = multicore,
-                 ncores = as.integer(ncores),
-                 control = control,
-                 
-                 accRate = accept/niter,
-                 chains = mcmcSample,
-                 llkChain = llkChain)  )
+  return( new( "smcmc",
+               object,
+               initPar = initPar,
+               niter = as.integer(niter),
+               nsim =  as.integer(nsim), 
+               propCov = propCov,
+               burn = as.integer(burn),
+               priorFun = priorFun,
+               targetRate = targetRate,
+               recompute = recompute,
+               multicore = multicore,
+               ncores = as.integer(ncores),
+               control = control,
+               
+               accRate = accept/niter,
+               chains = mcmcSample,
+               llkChain = llkChain)  )
   
 }

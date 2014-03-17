@@ -9,6 +9,8 @@
 #' @param nsim    Number of simulations used to evaluate the synthetic likelihood at each location.
 #' @param param  Named vector containing the value of the ALL parameters (including the sliced one). Parameters that are not
 #'                in \code{parName} will be fixed to the values in \code{param}.
+#' @param pairs if \code{TRUE} the function will produce a 2D slice for every pair of parameters in \code{ranges}. \code{FALSE}
+#'              by default.
 #' @param draw    If \code{TRUE} the slice will be plotted.
 #' @param trans Named vector of transformations to be applied to the parameters in \code{parName} 
 #'               before plotting {ex: \code{trans = c(s = "exp", d = "exp")}}/ 
@@ -19,7 +21,28 @@
 #'                which will be used if \code{multicore == TRUE}. The user has to remember to stop the cluster. 
 #' @param ... additional arguments to be passed to \code{slik()}, see \code{\link{slik}}.
 #' @return Either a vector or matrix of log-synthetic likelihood estimates, depending on whether \code{length(parNames) ==} 1 or 2.
-#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>                         
+#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com> 
+#' @examples
+#' data(ricker_sl)
+#' 
+#'# Plotting slices of the logLikelihood
+#'slice(object = ricker_sl, 
+#'      ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
+#'                    "logPhi" = seq(2, 2.6, by = 0.01),
+#'                     "logSigma" = seq(-2, -0.5, by = 0.01)), 
+#'      param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
+#'      nsim = 500)
+#'             
+#'\dontrun{
+#'# Plotting a contour of the logLikelihood
+#'slice(object = ricker_sl, 
+#'      ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
+#'                    "logPhi" = seq(2, 2.6, by = 0.01),
+#'                    "logSigma" = seq(-2, -0.5, by = 0.04)), 
+#'      pairs = TRUE,
+#'      param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
+#'      nsim = 500, multicore = T)   
+#'}                     
 #' @export 
 
 slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, draw = TRUE, trans = NULL, 

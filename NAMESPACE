@@ -2,8 +2,11 @@ useDynLib(synlik)
 exportPattern("^[[:alpha:]]+")
 
 # Imported stuff
+<<<<<<< HEAD
 importFrom(combinat, combn)
 
+=======
+>>>>>>> e050e87... More clean-up
 importFrom(compiler, cmpfun)
 
 importFrom(parallel, clusterApply)

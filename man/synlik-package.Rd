@@ -1,6 +1,5 @@
 \name{synlik-package}
 \alias{synlik-package}
-\alias{synlik}
 \docType{package}
 \title{
 Synthetic Likelihood methods for intractable likelihoods

@@ -1,9 +1,6 @@
 \name{smcmc-class}
 \alias{smcmc-class}
 \title{\code{smcmc-class}}
-\usage{
-  .smcmc(...)
-}
 \description{
   Object representing the results of MCMC estimation on an
   object of class \code{synlik}, from which it inherits.  }
@@ -45,7 +42,21 @@
   niter elements where the i-th element is contains the
   estimate of the synthetic likelihood at the i-th
   iteration (\code{numeric}).} \item{control}{Control
-  parameters used by the MCMC sampler.} }
+  parameters used by the MCMC sampler: \itemize{
+  \item{\code{theta} = controls the speed of adaption.
+  Should be between 0.5 and 1.  A lower gamma leads to
+  faster adaption.} \item{\code{adaptStart} = iteration
+  where the adaption starts. Default 0.}
+  \item{\code{adaptStop} = iteration where the adaption
+  stops. Default \code{burn + niter}} \item{\code{saveFile}
+  = path to the file where the intermediate results will be
+  stored (ex: "~/Res.RData").} \item{\code{saveFreq} =
+  frequency with which the intermediate results will be
+  saved on \code{saveFile}.  Default 100.}
+  \item{\code{verbose} = if \code{TRUE} intermediate
+  posterior means will be printer.} \item{\code{verbFreq} =
+  frequency with which the intermediate posterior means
+  will be printer. Default 500.} } } }
 }
 \examples{
 # Load "synlik" object

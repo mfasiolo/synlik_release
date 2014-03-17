@@ -1,6 +1,6 @@
 \name{continue.smcmc}
+\alias{continue,smcmc,missing-method}
 \alias{continue.smcmc}
-\alias{plot,smcmc,missing-method}
 \title{Continuing estimation of an \code{smcmc} object.}
 \usage{
   continue.smcmc(object, niter = object@niter,

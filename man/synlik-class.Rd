@@ -3,8 +3,6 @@
 \alias{synlik-class}
 \title{\code{synlik-class}}
 \usage{
-
-
   synlik(...)
 }
 \description{
@@ -34,13 +32,11 @@
   \item{plotFun}{Function that will be used to plot
   \code{object@data}. Prototype should be \code{fun(x,
   ...)} (\code{function}).} }
-
-  Constructor for synlik class
 }
 \examples{
 #### Create Object
-ricker_sl <- synlik(simulator = rickerStats,
-                    summaries = wood2010,
+ricker_sl <- synlik(simulator = rickerSimul,
+                    summaries = rickerStats,
                     param = c( logR = 3.8, logSigma = log(0.3), logPhi = log(10) ),
                     extraArgs = list("nObs" = 50, "nBurn" = 50),
                     plotFun = function(input, ...)

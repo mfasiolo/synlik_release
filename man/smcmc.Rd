@@ -36,6 +36,8 @@
   cluster, which will be used if \code{multicore == TRUE}.
   The user has to remember to stop the cluster.}
 
+  \item{control}{see \code{\link{smcmc-class}}.}
+
   \item{...}{additional arguments to be passed to
   \code{slik} function, see \code{\link{slik}}.}
 }

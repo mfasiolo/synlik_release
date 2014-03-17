@@ -24,6 +24,10 @@
   are not in \code{parName} will be fixed to the values in
   \code{param}.}
 
+  \item{pairs}{if \code{TRUE} the function will produce a
+  2D slice for every pair of parameters in \code{ranges}.
+  \code{FALSE} by default.}
+
   \item{draw}{If \code{TRUE} the slice will be plotted.}
 
   \item{trans}{Named vector of transformations to be
@@ -54,6 +58,28 @@
 }
 \description{
   Plot slices of the synthetic log-likelihood.
+}
+\examples{
+data(ricker_sl)
+
+# Plotting slices of the logLikelihood
+slice(object = ricker_sl,
+     ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
+                   "logPhi" = seq(2, 2.6, by = 0.01),
+                    "logSigma" = seq(-2, -0.5, by = 0.01)),
+     param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
+     nsim = 500)
+
+\dontrun{
+# Plotting a contour of the logLikelihood
+slice(object = ricker_sl,
+     ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
+                   "logPhi" = seq(2, 2.6, by = 0.01),
+                   "logSigma" = seq(-2, -0.5, by = 0.04)),
+     pairs = TRUE,
+     param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
+     nsim = 500, multicore = T)
+}
 }
 \author{
   Matteo Fasiolo <matteo.fasiolo@gmail.com>

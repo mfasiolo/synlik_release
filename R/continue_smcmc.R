@@ -26,7 +26,7 @@
 #' 
 #' @seealso \code{\link{smcmc-class}}, \code{\link{smcmc}}, \code{\link{continue}}.
 #' 
-#' @aliases plot,smcmc,missing-method
+#' @aliases continue,smcmc,missing-method
 #' @examples
 #' # For an example see help("smcmc-class").
 #' @rdname continue-smcmc
@@ -51,7 +51,7 @@ continue.smcmc <- function(object,
   
   # For initPar and burn unless they have been specified by the user, we put
   # initPar to the final mcmc points in "object" and we don't do any more burn in.
-  tmpObject <- smcmc(object, 
+  tmpObject <- smcmc(object = object, 
                      initPar = drop( tail(object@chains, 1) ),
                      niter = niter,
                      nsim = nsim,
@@ -68,7 +68,8 @@ continue.smcmc <- function(object,
   
   avgAcceptRate <- (object@accRate*object@niter + tmpObject@accRate*tmpObject@niter) / (object@niter + tmpObject@niter)
   
-  return(.smcmc(tmpObject,
+  return(new(   "smcmc",
+                tmpObject,
                 
                 initPar = object@initPar,   # Resetting the values of these two param, so we don't lose information  
                 burn = as.integer(object@burn),

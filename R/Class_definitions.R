@@ -61,7 +61,7 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 #' 
 #' @usage{synlik(...)}
 #' @description{ Basic class for simulation-based approximate inference using Synthetic Likelihood methods.  }
-#'
+#' 
 #' \section{Slots}{
 #' \describe{
 #'    \item{param}{Named vector of parameters used by \code{object@@simulator} (\code{numeric}).}
@@ -119,6 +119,7 @@ setClass( "synlik",
           validity = .check.synlik
 )
 
+#' @param ... See section "Slots".
 #' @rdname synlik-class
 synlik <- function(...)
 {

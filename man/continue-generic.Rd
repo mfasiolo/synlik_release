@@ -1,7 +1,7 @@
 \docType{methods}
 \name{continue}
 \alias{continue}
-\alias{continue,smcmc,missing-method}
+\alias{continue,smcmc-method}
 \title{Continuing estimation.}
 \arguments{
   \item{object}{An object representing the results of an

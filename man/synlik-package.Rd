@@ -35,7 +35,6 @@ Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic syste
 \keyword{ Intractable Likelihood, Simulation-based inference. }
 \seealso{
 ~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
 #### Create synlik object
@@ -73,7 +72,7 @@ slice(object = ricker_sl,
                     "logPhi" = seq(2, 2.6, by = 0.01),
                     "logSigma" = seq(-2, -0.5, by = 0.01)), 
       param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
-      nsim = 500, multicore = F, ncores = 4)
+      nsim = 500, multicore = FALSE)
 
 #### MCMC estimation possibly using multiple cores
 set.seed(4235)

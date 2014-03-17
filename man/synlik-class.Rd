@@ -5,6 +5,9 @@
 \usage{
   synlik(...)
 }
+\arguments{
+  \item{...}{See section "Slots".}
+}
 \description{
   Basic class for simulation-based approximate inference
   using Synthetic Likelihood methods.  }

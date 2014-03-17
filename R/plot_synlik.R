@@ -2,32 +2,7 @@
 #### Method to plot the object
 ##########
 
-#' Method for plotting an object of class \code{synlik}.
-#'
-#' It basically calls the slot \code{object@@plotFun} with input \code{object@@data}, if it has been provided by the user. 
-#' Otherwise it tries to use the \code{plot(x = object@@data, y, ...)} generic.
-#'
-#' @param x An object of class \code{synlik}.
-#' @param ... additional arguments to be passed to \code{object@@plotFun}.
-#'
-#' @return NULL
-#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>  
-#' @seealso \code{\link{synlik-class}}, \code{\link{plot}}.
-#' @aliases plot,synlik,missing-method
-#' @export
-#' @examples
-#' data(ricker_sl)
-#' 
-#' # Using ricker_sl@@plotFun
-#' plot(ricker_sl)
-#' 
-#' # Using generic plot, doesn't work well because object@@data is a matrix. 
-#' ricker_sl@@plotFun <- NULL
-#' plot(ricker_sl)
-#' 
-#' @rdname plot-synlik
-
-plot.synlik <- function(x, ...)
+.plot.synlik <- function(x, ...)
 {
   if(!is(x, "synlik")) stop("object has to be of class \"synlik\" ")
   
@@ -43,7 +18,30 @@ plot.synlik <- function(x, ...)
   return( invisible() )
 }
 
+#' Method for plotting an object of class \code{synlik}.
+#'
+#' It basically calls the slot \code{object@@plotFun} with input \code{object@@data}, if it has been provided by the user. 
+#' Otherwise it tries to use the \code{plot(x = object@@data, y, ...)} generic.
+#'
+#' @param x An object of class \code{synlik}.
+#' @param ... additional arguments to be passed to \code{object@@plotFun}.
+#'
+#' @return NULL
+#' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>  
+#' @seealso \code{\link{synlik-class}}, \code{\link{plot}}.
+#' @aliases plot.synlik plot-synlik plot,synlik,missing-method
+#' @method plot synlik missing
+#' @examples
+#' data(ricker_sl)
+#' 
+#' # Using ricker_sl@@plotFun
+#' plot(ricker_sl)
+#' 
+#' # Using generic plot, doesn't work well because object@@data is a matrix. 
+#' ricker_sl@@plotFun <- NULL
+#' plot(ricker_sl)
+#' 
+#' @rdname plot-synlik
 setMethod("plot",
           signature = signature(x = "synlik", y = "missing"),
-          definition = plot.synlik
-)
+          definition = .plot.synlik)

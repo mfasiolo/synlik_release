@@ -57,7 +57,7 @@
 #' @details When \code{is("smcmc", object) == TRUE}  continues MCMC estimation of an object of class \code{smcmc}. All input parameters are defaulted to the corresponding
 #' slots in the input object, with the exception of cluster. The chain restarts were it ended, burn-in is set to zero, the
 #' same prior (if any) is used.
-#' @aliases continue,smcmc,missing-method
+#' @aliases continue,smcmc-method
 #' @rdname continue-generic
 #' 
 setMethod("continue", 

@@ -1,39 +1,4 @@
-
-##########
-#' Method for plotting an object of class \code{smcmc}.
-#'
-#' @param x An object of class \code{smcmc}.
-#' @param trans Name list or vector containing names of transforms for some parameters (ex: \code{list("par1" = "exp", "par2" = "log")}).
-#'              The transformations will be applied before plotting.
-#' @param addPlot1 Name of additional plotting function that will be call after the MCMC chain have been plotted. It has
-#'                 to have prototype \code{fun(nam, ...)} where \code{nam} will be the parameter name. See "examples".
-#' @param addPlot2 Name of additional plotting function that will be call after the histograms have been plotted. It has
-#'                 to have prototype \code{fun(nam, ...)} where \code{nam} will be the parameter name. See "examples".
-#' @param ... additional arguments to be passed to the plotting functions.
-#'
-#' @return NULL
-#' 
-#' @seealso \code{\link{smcmc-class}}, \code{\link{plot}}.
-#' @aliases plot,smcmc,missing-method
-#' @export 
-#' @examples
-#' data(ricker_smcmc)
-#' 
-#' # Functions for additional annotations (true parameters)
-#' addline1 <- function(parNam, ...) abline(h = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3) 
-#' addline2 <- function(parNam, ...) abline(v = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3)
-#' 
-#' # Transformations (exponentials)
-#' trans <- rep("exp", 3)
-#' names(trans) <- names(ricker_smcmc@@param)
-#' 
-#' plot(ricker_smcmc, 
-#'      trans = trans,
-#'      addPlot1 = "addline1", 
-#'      addPlot2 = "addline2")
-#' @rdname plot-smcmc
-
-plot.smcmc <- function(x, trans = NULL, addPlot1 = NULL, addPlot2 = NULL, ...)
+.plot.smcmc <- function(x, trans = NULL, addPlot1 = NULL, addPlot2 = NULL, ...)
 {
   if(!is(x, "smcmc")) stop("object has to be of class \"smcmc\" ")
   chains <- x@chains
@@ -62,7 +27,7 @@ plot.smcmc <- function(x, trans = NULL, addPlot1 = NULL, addPlot2 = NULL, ...)
   
   print("Plotting correlation structure of the posterior sample")
   .plotMatrix(cor(chains), title = "Correlations", xLabels = names(x@param), yLabels = names(x@param), 
-             scaleLab = "Correlation", correl = TRUE, ...)
+              scaleLab = "Correlation", correl = TRUE, ...)
   
   readline(prompt = "Press <Enter> to see the next plot...")
   
@@ -72,7 +37,46 @@ plot.smcmc <- function(x, trans = NULL, addPlot1 = NULL, addPlot2 = NULL, ...)
 }
 
 
+
+##########
+#' Method for plotting an object of class \code{smcmc}.
+#'
+#' @param x An object of class \code{smcmc}.
+#' @param trans Name list or vector containing names of transforms for some parameters (ex: \code{list("par1" = "exp", "par2" = "log")}).
+#'              The transformations will be applied before plotting.
+#' @param addPlot1 Name of additional plotting function that will be call after the MCMC chain have been plotted. It has
+#'                 to have prototype \code{fun(nam, ...)} where \code{nam} will be the parameter name. See "examples".
+#' @param addPlot2 Name of additional plotting function that will be call after the histograms have been plotted. It has
+#'                 to have prototype \code{fun(nam, ...)} where \code{nam} will be the parameter name. See "examples".
+#' @param ... additional arguments to be passed to the plotting functions.
+#'
+#' @return NULL
+#' 
+#' @seealso \code{\link{smcmc-class}}, \code{\link{plot}}.
+#' @aliases plot.smcmc plot-smcmc plot,smcmc,missing-method
+#' @method plot smcmc missing
+#' @examples
+#' data(ricker_smcmc)
+#' 
+#' # Functions for additional annotations (true parameters)
+#' addline1 <- function(parNam, ...) abline(h = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3) 
+#' addline2 <- function(parNam, ...) abline(v = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3)
+#' 
+#' # Transformations (exponentials)
+#' trans <- rep("exp", 3)
+#' names(trans) <- names(ricker_smcmc@@param)
+#' 
+#' plot(ricker_smcmc, 
+#'      trans = trans,
+#'      addPlot1 = "addline1", 
+#'      addPlot2 = "addline2")
+#' @rdname plot-smcmc
+#' 
 setMethod("plot",
           signature = signature(x = "smcmc", y = "missing"),
-          definition = plot.smcmc
-)
+          definition = .plot.smcmc)
+
+
+
+
+

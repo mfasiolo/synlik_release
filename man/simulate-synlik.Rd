@@ -1,8 +1,6 @@
 \name{simulate}
 \alias{simulate}
 \alias{simulate,synlik-method}
-\alias{simulate-synlik}
-\alias{simulate.synlik}
 \title{Simulate data or statistics from an object of class \code{synlik}.}
 \arguments{
   \item{object}{An object of class \code{synlik}.}

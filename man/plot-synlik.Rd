@@ -1,7 +1,6 @@
 \name{plot-synlik}
-\alias{plot,synlik,missing-method}
 \alias{plot-synlik}
-\alias{plot.synlik}
+\alias{plot,synlik,missing-method}
 \title{Method for plotting an object of class \code{synlik}.}
 \arguments{
   \item{x}{An object of class \code{synlik}.}

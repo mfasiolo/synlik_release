@@ -1,6 +1,6 @@
 \name{blow_sl}
-\alias{blowStats}
 \alias{blow_sl}
+\alias{blowStats}
 \title{Blowfly model}
 \description{
   \code{synlik} object containing the blowfly model

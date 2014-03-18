@@ -1,7 +1,6 @@
 \name{plot-smcmc}
-\alias{plot,smcmc,missing-method}
 \alias{plot-smcmc}
-\alias{plot.smcmc}
+\alias{plot,smcmc,missing-method}
 \title{Method for plotting an object of class \code{smcmc}.}
 \arguments{
   \item{x}{An object of class \code{smcmc}.}

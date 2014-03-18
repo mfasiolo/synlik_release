@@ -1,7 +1,7 @@
 \name{ricker_sl}
-\alias{rickerStats}
 \alias{ricker_sl}
 \alias{ricker_smcmc}
+\alias{rickerStats}
 \title{Ricker model}
 \description{
   \code{ricker_sl} is \code{synlik} object containing the

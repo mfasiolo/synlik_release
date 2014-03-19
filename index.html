@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Synlik by Jugurtha</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Synlik</h1>
+        <p>Synthetic Likelihood methods for intractable likelihoods.</p>
+
+        <p class="view"><a href="https://github.com/Jugurtha/synlik_release">View the Project on GitHub <small>Jugurtha/synlik_release</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Jugurtha/synlik_release/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Jugurtha/synlik_release/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Jugurtha/synlik_release">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a name="the-synlik-r-package" class="anchor" href="#the-synlik-r-package"><span class="octicon octicon-link"></span></a>The <em>synlik</em> R package</h3>
+
+<p>Synthetic Likelihood (SL) is a statistics methodology, introduced by Wood (2010), which can be used to do inference for models were the likelihood function is unavailable or intractable. SL is a general-purpose methodology in the sense that, as long as the user is able to simulate data from his model, he should be able to fit it. For this reason, the <strong>synlik</strong> R package puts very few limitations on the model being fitted: the user has simply to provide a simulator and (optionally) a function that transforms that data into summary statistics. </p>
+
+<p>The packages has been written with attention to computational efficiency and most of the functions provided by the package supports computation on multiple cores. At the moment <strong>synlik</strong> includes a set of simple, but useful and well documented statistical tools. In the future the package will be often updated and improved by the addition of new statistical methods and tools.</p>
+
+<p>To check what <strong>synlik</strong> does, download of install it from here or from CRAN and have a look at its vignette:</p>
+
+<pre><code>library("synlik")
+vignette("synlik")
+</code></pre>
+
+<h3>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
+
+<p>Matteo Fasiolo (<a href="https://github.com/Jugurtha" class="user-mention">@Jugurtha</a>) and Simon Wood.</p>
+
+<h3>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h3>
+
+<ul>
+<li>Matteo Fasiolo, Simon Wood. An introduction to synlik (2014). R package version 0.1.0.</li>
+<li>Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.</li>
+</ul><h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>To report bugs or the suggest new features, please contact me at matteo_DOT_fasiolo_AT_gmail.com.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Jugurtha">Jugurtha</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

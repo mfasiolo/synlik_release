@@ -104,8 +104,8 @@ slice(object = ricker_sl,
                     "logPhi" = seq(2, 2.6, by = 0.02)), 
       pairs = TRUE,
       param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
-      nsim = 500, 
-      multicore = TRUE)
+      nsim = 1000, 
+      multicore = FALSE)
 ```
   Notice that here we have used the `"multicore"` options, which distributes the computation among different cores or cluster nodes.
   Also `"slik"` provides this options, but for such a simple model it is not worth it.
@@ -180,7 +180,7 @@ Then, we can estimate the parameters by adaptive MCMC:
 blow_sl <- smcmc(blow_sl, 
                  initPar = log( c( "delta" = 0.1, "P" = 8, "N0" = 600, 
                                    "sig.p" = 0.2, "tau" = 17, "sig.d" = 0.3)  ),
-                 niter = 20, 
+                 niter = 200, 
                  burn = 0,
                  propCov = diag(rep(0.001, 6)),
                  nsim = 500, 
@@ -190,8 +190,7 @@ blow_sl <- smcmc(blow_sl,
                            dunif(input[6], log(0.01), log(1), log = TRUE)
                  },
                  targetRate = 0.15,
-                 multicore = TRUE,
-                 ncores = 2
+                 multicore = FALSE
 )
 ```
 We plot the results on the original scale:
@@ -259,7 +258,7 @@ We can then estimate the parameters by MCMC:
 ```{r}
 stable_sl <- smcmc(stable_sl, 
                    initPar = c(alpha = log(1.7), beta = -0.1, gamma = log(1.3), delta = 1.5),
-                   niter = 50, 
+                   niter = 200, 
                    burn = 0,
                    priorFun = function(input, ...) { 
                                  dunif(input[1], log(1), log(2), log = TRUE) + 
@@ -280,7 +279,8 @@ slice(object = stable_sl,
       param = colMeans(stable_sl@chains), 
       trans = list("alpha" = "exp", "gamma" = "exp"),
       nsim = 1000, 
-      multicore = TRUE)
+      multicore = TRUE,
+      ncores = 2)
 ```
 We could do better by putting some more effort in choosing the summary statistics.
 
@@ -293,92 +293,6 @@ References
 
 *  Diethelm Wuertz, Martin Maechler and Rmetrics core team members. (2013). stabledist: Stable Distribution Functions. R package version 0.6--6.
 
-
-
-
-
-
-
-
-<!--(
-Trait model example
-----------------------------
-
-As another example, let us consider the trait-based model of community dynamics proposed by Jabot (2010).
-The model, its parameters and the summary statistics used are described in the same reference 
-and in the manual of the EasyABC package (`?trait_model`).
-This time we have to set up the simulator ourself:
-```{r traitSimul}
-traitSimul <- function(param, nsim, extraArgs, ...)
-{ 
-  #if( !is.loaded("EasyABC") ) library("EasyABC") 
-  
-  if(length(param) != 4) stop("Wrong number of parameters")
-  
-  stopifnot( param[3] < 125 || param[3] > -25 )
-  
-  # We have to provide the seed
-  seeds <- sample(1:10000, nsim, replace = FALSE)
-  output <- matrix(NA, nsim, 4)
-
-  # We have to loop in R to get multiple simulations!
-  for(ii in 1:nsim) 
-    output[ii, ] <- trait_model(input=c(seeds[ii], J = 500, exp(param[1:2]), nt = 1, param[3], exp(param[4])))
-  
-  return(output)
-}
-
-```
-`trait_model` simulates the summary statistics directly, so we don't have to specify the `summaries` slot:
-```{r trait_constr}
-trait_sl <- synlik(simulator = traitSimul,
-                   param = c( logI = 4, logA = 0, h = 15, logsigma = log(1.5) ),
-                   plotFun = function(input, ...) NULL
-)
-trait_sl@data <- simulate(trait_sl)
-trait_sl@data
-```
-We check the normality of the statistics:
-```{r trait_norm}
-checkNorm(trait_sl, nsim = 200)
-```
-which looks reasonably good.
-This model is quite slow to simulate from, hence using multiple cores can help:
-```{r trait_slice_ser}
-tim <- proc.time()
-slice(object = trait_sl, 
-      ranges = list("logI" = seq(3, 6, by = 0.2)), 
-      param = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ), 
-      nsim = 100, 
-      draw = FALSE,
-      multicore = FALSE)
-proc.time() - tim
-```
-
-```{r trait_slice_par}
-tim <- proc.time()
-slice(object = trait_sl, 
-      ranges = list("logI" = seq(3, 6, by = 0.2)), 
-      param = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ), 
-      nsim = 100, 
-      multicore = TRUE)
-proc.time() - tim
-```
-
-Finally we estimate the parameters by MCMC on multiple cores:
-```{r trait_smcmc}
-trait_sl <- smcmc(trait_sl, 
-                  initPar = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ),
-                  niter = 10, 
-                  burn = 0,
-                  priorFun = function(input, ...){ input[3] > -25 && input[3] < 125 } , 
-                  propCov = diag(c(0.1, 0.1, 0.1, 0.1))^2, 
-                  nsim = 100, 
-                  targetRate = 0.2,
-                  multicore = TRUE)
-plot(trait_sl)
-```
-)--> 
 
 
 

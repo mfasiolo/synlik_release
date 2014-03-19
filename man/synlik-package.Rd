@@ -34,13 +34,13 @@ Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic syste
 }
 \keyword{ Intractable Likelihood, Simulation-based inference. }
 \seealso{
-For some examples see the Vignettes (type \code{vignette("synlik_vignette")}).
+For some examples see the Vignettes (type \code{vignette("synlik")}).
 }
 \examples{
 
 \dontrun{
 #### Here I put a simple example, 
-#### if you want to see more type: vignette("synlik_vignette")
+#### if you want to see more type: vignette("synlik")
 }
 
 #### Create synlik object
@@ -74,9 +74,9 @@ slik(ricker_sl,
 
 #### Plotting a slice of the log-Likelihood possibly using multiple cores
 slice(object = ricker_sl, 
-      ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
-                    "logPhi" = seq(2, 2.6, by = 0.01),
-                    "logSigma" = seq(-2, -0.5, by = 0.01)), 
+      ranges = list("logR" = seq(3.5, 3.9, by = 0.02),
+                    "logPhi" = seq(2, 2.6, by = 0.02),
+                    "logSigma" = seq(-2, -0.5, by = 0.05)), 
       param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
       nsim = 500, multicore = FALSE)
 

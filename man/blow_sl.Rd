@@ -1,6 +1,6 @@
 \name{blow_sl}
-\alias{blow_sl}
 \alias{blowStats}
+\alias{blow_sl}
 \title{Blowfly model}
 \description{
   \code{synlik} object containing the blowfly model
@@ -15,7 +15,8 @@ plot(blow_sl)
 simulate(blow_sl, stats = TRUE)
 
 slik(blow_sl,
-     param  = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
+     param  = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400,
+                      "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
      nsim    = 1e3)
 
 # Using Nicholson's data
@@ -27,7 +28,8 @@ blow_sl@data <- bf1$pop
 blow_sl@extraArgs$obsData <- bf1$pop #Important: blow_sl@blowStats uses the observed data
 
 slik(blow_sl,
-     param  = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
+     param  = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400,
+                      "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
      nsim    = 1e3)
 }
 \author{

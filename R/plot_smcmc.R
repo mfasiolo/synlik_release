@@ -60,8 +60,12 @@
 #' data(ricker_smcmc)
 #' 
 #' # Functions for additional annotations (true parameters)
-#' addline1 <- function(parNam, ...) abline(h = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3) 
-#' addline2 <- function(parNam, ...) abline(v = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3)
+#' addline1 <- function(parNam, ...){ 
+#'                abline(h = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3) 
+#'                }
+#' addline2 <- function(parNam, ...){ 
+#'                abline(v = exp(ricker_smcmc@@param[parNam]), lwd = 2, lty = 2, col = 3)
+#'                }
 #' 
 #' # Transformations (exponentials)
 #' trans <- rep("exp", 3)

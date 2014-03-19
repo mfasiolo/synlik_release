@@ -63,14 +63,14 @@
 ####
 # Test
 ####
-
+# 
 # currPar <- c(0.5, 1.5)
 # nsim <- 1000
 # constr <- list("indexes" = c(1, 2), "upper" = c(1, 2), "lower" = c(0, 1))
 # covar <- matrix(c(2, 1, 1, 2), 2, 2)
 # 
-# out1 <-  mvrnorm(n = nsim, mu = currPar, Sigma = covar)
-# output <- .paramsSimulator(theMean =  currPar, covar, nsim, constr)
+# out1 <-  synlik:::.rmvn(nsim, currPar, covar)
+# output <- synlik:::.paramsSimulator(theMean =  currPar, covar, nsim, constr)
 # 
 # plot(out1)
 # points(output, col = 2)

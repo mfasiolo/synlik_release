@@ -42,7 +42,7 @@
 #'                    "logSigma" = seq(-2, -0.5, by = 0.04)), 
 #'      pairs = TRUE,
 #'      param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
-#'      nsim = 500, multicore = T)   
+#'      nsim = 500, multicore = TRUE)   
 #'}                     
 #' @export 
 

@@ -114,7 +114,7 @@ smcmc <- function(object,
     if( anyFix ) propPar[fixPar] <- currPar[fixPar]
     propPrior <- priorFun(propPar, ...)
     
-    if( propPrior != -Inf )
+    if( is.finite(propPrior) )
     { 
       # Compute likelihood of proposed param
       propLogLik <- try( slik(object, param = propPar, nsim = nsim, multicore = multicore, ncores = ncores, cluster = cluster, ...) )

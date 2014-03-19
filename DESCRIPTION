@@ -20,6 +20,7 @@ Imports:
     stats,
     parallel
 Suggests: 
-    knitr
+    knitr,
+    stabledist
 LinkingTo: Rcpp, RcppArmadillo
 VignetteBuilder: knitr

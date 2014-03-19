@@ -53,6 +53,8 @@ checkNorm <- function(object,
                       cex.lab = 1, 
                       ...)
 {
+  oldPar <- par(no.readonly = TRUE)
+  
   if( is(object, "synlik") )
   {
   
@@ -66,10 +68,10 @@ checkNorm <- function(object,
     
     s <- if( !is.null(summaries) )
     {
-      as.vector( summaries(x = object@data, extraArgs = object@extraArgs, ...) )
+      drop( summaries(x = object@data, extraArgs = object@extraArgs, ...) )
     } else
     {
-      object@data
+      drop( object@data )
     }
     
   }else
@@ -81,7 +83,7 @@ checkNorm <- function(object,
     if( !is.numeric(object) ) stop("object should be either of class \"synlik\", a numeric matrix or vector")
     if( !is.matrix(object) ) object <- matrix(object, length(object), 1)
     S <- t( object )
-    s <- observed
+    s <- drop( observed )
   }
   
   p <- nrow(S)
@@ -136,5 +138,8 @@ checkNorm <- function(object,
     qqnorm(z, cex.axis = cex.axis, cex.lab = cex.lab)
     qqline(z, col = 2)
   }
-  ps
+  
+  par(oldPar)
+  
+  return(ps)
 }

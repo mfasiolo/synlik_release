@@ -34,9 +34,15 @@ Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic syste
 }
 \keyword{ Intractable Likelihood, Simulation-based inference. }
 \seealso{
-~~ Optional links to other man pages, e.g. ~~
+For some examples see the Vignettes (type \code{vignette("synlik_vignette")}).
 }
 \examples{
+
+\dontrun{
+#### Here I put a simple example, 
+#### if you want to see more type: vignette("synlik_vignette")
+}
+
 #### Create synlik object
 ricker_sl <- synlik(simulator = rickerSimul,
                     summaries = rickerStats,

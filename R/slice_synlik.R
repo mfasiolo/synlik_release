@@ -12,7 +12,7 @@
 #' @param pairs if \code{TRUE} the function will produce a 2D slice for every pair of parameters in \code{ranges}. \code{FALSE}
 #'              by default.
 #' @param draw    If \code{TRUE} the slice will be plotted.
-#' @param trans Named vector of transformations to be applied to the parameters in \code{parName} 
+#' @param trans Named vector or list of transformations to be applied to the parameters in \code{parName} 
 #'               before plotting {ex: \code{trans = c(s = "exp", d = "exp")}}/ 
 #' @param multicore  If \code{TRUE} the \code{object@@simulator} and \code{object@@summaries} functions will
 #'                    be executed in parallel. That is the \code{nsim} simulations will be divided in multiple cores.
@@ -21,6 +21,7 @@
 #'                which will be used if \code{multicore == TRUE}. The user has to remember to stop the cluster. 
 #' @param ... additional arguments to be passed to \code{slik()}, see \code{\link{slik}}.
 #' @return Either a vector or matrix of log-synthetic likelihood estimates, depending on whether \code{length(parNames) ==} 1 or 2.
+#'         These are returned invisibly.
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com> 
 #' @examples
 #' data(ricker_sl)
@@ -48,10 +49,12 @@
 slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, draw = TRUE, trans = NULL, 
                          multicore = FALSE, ncores = detectCores() - 1, cluster = NULL, ...)
 {
-  if(!is(object, "synlik")) stop("object has to be of class \"synlik\" ")
-  if(length(object@data) == 0) stop("There is no data in the object: length(object@data) == 0")
-  if(length(names(param)) == 0) names(param) <- names(object@param)
-  if(!is.list(ranges)) stop("ranges has to be a list of named vectors")
+  if( !is(object, "synlik") ) stop("object has to be of class \"synlik\" ")
+  if( length(object@data) == 0 ) stop("There is no data in the object: length(object@data) == 0")
+  if( is.null(names(param)) ) names(param) <- names(object@param)
+  if( !is.list(ranges) ) stop("ranges has to be a list of named vectors")
+
+  if( !is.null(trans) ) trans <- as.list(trans)
   
   nPar <- length(ranges)
   out <- list()
@@ -103,12 +106,9 @@ slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, dra
       
       if(draw)
       {
-        parName
-        if(!is.null(trans[[parName]]))
+        if( !is.null(trans[[parName]]) )
         {
-          tmpTrans <- parName
-          stopifnot( is.character(trans), length(trans) == 1 )
-          tmpRange <- get(trans)(tmpRange)
+          tmpRange <- get(trans[[parName]])(tmpRange)
         }
         
         plot(tmpRange, llkTransect, type = 'l', 
@@ -165,14 +165,13 @@ slice <- function(object, ranges, nsim, param = object@param, pairs = FALSE, dra
       {
         if(!is.null(trans))
         {
-          stopifnot( all(is.character(trans)), length(trans) == 2, all(names(trans) %in% parName) )
-          ranges[[parName[1]]] <- get(trans[parName[1]])(ranges[[parName[1]]])
-          ranges[[parName[2]]] <- get(trans[parName[2]])(ranges[[parName[2]]])
+          ranges[[parName[1]]] <- get(trans[[parName[1]]])(ranges[[parName[1]]])
+          ranges[[parName[2]]] <- get(trans[[parName[2]]])(ranges[[parName[2]]])
         }
         
-        .plotMatrix(x = llkTransect, title = paste("Transect wrt parameters", parName[1], "and", parName[2]),
+        .plotMatrix(x = llkTransect, title = paste("Transect wrt params", parName[1], "and", parName[2]),
                    xLabels = round(ranges[[parName[2]]], 3), yLabels = rev(round(ranges[[parName[1]]], 3)), xlab = parName[2], 
-                   ylab = parName[1], scaleLab = "Log-likelihood")
+                   ylab = parName[1], scaleLab = "Log-lik")
       }
     }
   }

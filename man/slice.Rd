@@ -30,8 +30,8 @@
 
   \item{draw}{If \code{TRUE} the slice will be plotted.}
 
-  \item{trans}{Named vector of transformations to be
-  applied to the parameters in \code{parName} before
+  \item{trans}{Named vector or list of transformations to
+  be applied to the parameters in \code{parName} before
   plotting {ex: \code{trans = c(s = "exp", d = "exp")}}/}
 
   \item{multicore}{If \code{TRUE} the
@@ -54,7 +54,7 @@
 \value{
   Either a vector or matrix of log-synthetic likelihood
   estimates, depending on whether \code{length(parNames)
-  ==} 1 or 2.
+  ==} 1 or 2.  These are returned invisibly.
 }
 \description{
   Plot slices of the synthetic log-likelihood.

@@ -1,14 +1,13 @@
 
 <!--
 %\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{Vignette}
+%\VignetteIndexEntry{synlik_vignette}
 -->
   
-  An Introduction to **synlik** package
+  An Introduction to **synlik**
 =======================================
   
-  
-  ```{r setup, include=FALSE}
+```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
 ```
@@ -28,9 +27,9 @@ Creating a **synlik** object
   summary statistics. The `"simulator"` can generate any kind of output, as long as `"summaries"` is able to transform it into a matrix
   where each row is a simulated vector of statistics. If `"summaries"` is not specified, then `"simulator"` has to output such a matrix.
   
-  Here we set-up a `"synlik"` object representing the Ricker map. The obsevations are given by $Y_t \sim Pois(\phi * N_t)$, where the hidden
+  Here we set-up a `"synlik"` object representing the Ricker map. The obsevations are given by $Y_t \sim Pois(\phi N_t)$, where the hidden
   state has the following dynamics $N_t = r N_{t-1} exp( -N_{t-1} + e_t )$. Here is how we create the object:
-```{r ricker constr}
+```{r ricker_constr}
 library(synlik)
 ricker_sl <- synlik(simulator = rickerSimul,
                     summaries = rickerStats,
@@ -44,21 +43,21 @@ ricker_sl <- synlik(simulator = rickerSimul,
 
   Now we are ready to simulate data from the object:
   
-```{r ricker simul}
-ricker_sl@data <- simulate(ricker_sl, nsim = 1)
+```{r ricker_simul}
+ricker_sl@data <- simulate(ricker_sl, nsim = 1, seed = 54)
 ```
 
   Here `"ricker_sl@data"` is just a vector, but **synlik** allows the simulator to simulate any kind of object, so it is often
   necessary incorportate an adequate plotting function into the object:
   
-```{r ricker plot}
+```{r ricker_plot}
 ricker_sl@plotFun <- function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
 plot(ricker_sl)
 ```
  
   If we want to simulate several datasets we simply do:
   
-```{r ricker simul stats}
+```{r ricker_simul_stats}
 tmp <- simulate(ricker_sl, nsim = 10)
 dim(tmp)
 ```
@@ -82,24 +81,24 @@ Looking at the synthetic likelihood
 ----------------------------- 
 
   If we want to estimate the value of the synthetic likelihood at a certain location in the parameter space, we do it as follows:
-```{r ricker slik}
+```{r ricker_slik}
 slik(ricker_sl, 
            param  = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
            nsim    = 1e3)
 ```  
   
   We can also look as slices of this function wrt each parameter:
-```{r ricker slice}
+```{r ricker_slice}
 slice(object = ricker_sl, 
       ranges = list("logR" = seq(3.5, 3.9, by = 0.01),
                     "logPhi" = seq(2, 2.6, by = 0.01),
-                    "logSigma" = seq(-2, -0.5, by = 0.01)), 
+                    "logSigma" = seq(-2, -0.5, by = 0.02)), 
       param = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)), 
-      nsim = 500, multicore = FALSE)
+      nsim = 1000)
 ```
   
   Finally we can have 2D slices with respect to pairs of parameters:
-```{r ricker slice 2D}
+```{r ricker_slice_2D}
 slice(object = ricker_sl, 
       ranges = list("logR" = seq(3.5, 3.9, by = 0.02),
                     "logPhi" = seq(2, 2.6, by = 0.02)), 
@@ -117,7 +116,7 @@ Estimating the parameters by MCMC
   
  The unknown model parameters can be estimated by MCMC, using the `"smcmc"` function. Here is an example:
  
-```{r ricker smcmc}
+```{r ricker_smcmc}
 ricker_sl <- smcmc(ricker_sl, 
                    initPar = c(3.2, -1, 2.6),
                    niter = 500, 
@@ -130,12 +129,12 @@ ricker_sl <- smcmc(ricker_sl,
  
  If we have not reached convergence we can do some more MCMC iterations:
  
-```{r ricker continue}
+```{r ricker_continue}
 ricker_sl <- continue(ricker_sl, niter = 500)
 ``` 
 
  Finally we can plot the MCMC output:
-```{r ricker plot smcmc}
+```{r ricker_plot_smcmc}
 addline1 <- function(parNam, ...) abline(h = ricker_sl@param[parNam], lwd = 2, lty = 2, col = 3) 
 addline2 <- function(parNam, ...) abline(v = ricker_sl@param[parNam], lwd = 2, lty = 2, col = 3)
 
@@ -160,7 +159,7 @@ $$
 S_t \sim \text{binom}(e^{-\delta\epsilon_t}, N_{t-1}),
 $$
 denotes the adult survival process. Finally $e_t$ and $\epsilon_t$ are independent gamma distributed random variables, with unit means and variances equal to $\sigma_p^2$ and $\sigma_d^2$ respectively. We start by creating a `synlik` object:
-```{r blow constr}
+```{r blow_constr}
 blow_sl <- synlik(simulator = blowSimul,
                   summaries = blowStats,
                   param = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
@@ -169,18 +168,19 @@ blow_sl <- synlik(simulator = blowSimul,
 )
 ```
 for more details see `?blow_sl`. As before we simulate data and we store it back into the object:
-```{r blow simul}
-blow_sl@data <- simulate(blow_sl)
+```{r blow_simul}
+blow_sl@data <- simulate(blow_sl, seed = 84)
 blow_sl@extraArgs$obsData <- blow_sl@data
 ```
 As for the Ricker example, `blowStats` needs the observed data to calculate the statistics, hence we store it 
 into `extraArgs$obsData`. Notice that this is just a peculiarity of the chosen statistics. 
 
 Then, we can estimate the parameters by adaptive MCMC:
-```{r blow smcmc}
+```{r blow_smcmc}
 blow_sl <- smcmc(blow_sl, 
-                 initPar = log( c( "delta" = 0.1, "P" = 8, "N0" = 600, "sig.p" = 0.2, "tau" = 17, "sig.d" = 0.3)  ),
-                 niter = 200, 
+                 initPar = log( c( "delta" = 0.1, "P" = 8, "N0" = 600, 
+                                   "sig.p" = 0.2, "tau" = 17, "sig.d" = 0.3)  ),
+                 niter = 20, 
                  burn = 0,
                  propCov = diag(rep(0.001, 6)),
                  nsim = 500, 
@@ -195,20 +195,112 @@ blow_sl <- smcmc(blow_sl,
 )
 ```
 We plot the results on the original scale:
-```{r blow plot}
+```{r blow_plot}
 tmpTrans <- rep("exp", 6)
 names(tmpTrans) <- names(blow_sl@param)
 plot(blow_sl, trans = tmpTrans)
 ```
-The package includes some of Nicholson's experimental datasets, which can be loaded into the object:
+The package includes some of Nicholson (1954) experimental datasets, which can be loaded into the object:
 ```{r bf1}
 data(bf1)
 blow_sl@data <- bf1$pop
 blow_sl@extraArgs$obsData <- blow_sl@data
 ```
-and then used to estimate the parameters by MCMC.
+and used them to estimate the parameters by MCMC.
+
+Alpha-stable distribution
+----------------------------
+Let us consider a model that does produce time series data: the alpha stable distribution as
+described in Nolan (2012). For a quick reference do `library("stableDist")` and `?rstable`. 
+As a first step we need to wrap the function `rstable` into a function that fit the `synlik`
+framework:
+```{r}
+stableSimul <- function(param, nsim, extraArgs, ...)
+{
+  if( !is.loaded("stabledist") ) library(stabledist) 
+  
+  if( !( c("nObs") %in% names(extraArgs) ) ) stop("extraArgs should contain nObs")
+  nObs <- extraArgs$nObs 
+  
+  stopifnot( length(param) == 4 )
+  
+  param[c(1, 3)] <- exp(param[c(1, 3)])
+  if(abs(param[1] - 1) < 0.01) stop("alpha == 1 is not allowed")
+    
+  output <- rstable(nObs * nObs, alpha = param[1], beta = param[2], gamma = param[3], delta = param[4])
+  
+  return( matrix(output, nsim, nObs) )
+}
+```
+We need also to set up a function that calculates the summary statistics, which in our case are
+10 quantiles:
+```{r}
+stableStats <- function(x, extraArgs, ...){  
+  
+  if (!is.matrix(x)) x <- matrix(x, 1, length(x))
+  
+  X0 <- t( apply(x, 1, quantile, probs = seq(0.1, 0.9, length.out = 10)) )
+  
+  unname(X0)
+}
+```
+We then create a `synlik` object:
+```{r}
+stable_sl <- synlik( simulator = stableSimul,
+                     summaries = stableStats,
+                     param = c(alpha = log(1.5), beta = 0.1, gamma = log(1), delta = 2),
+                     extraArgs = list("nObs" = 1000),
+                     plotFun = function(input, ...) hist(input, xlab = "x", main = "The data", ...)
+                     )
+stable_sl@data <- simulate(stable_sl, seed = 67)
+```
+As we see from the histogram, the distribution is quite fat-tailed.
+We can then estimate the parameters by MCMC:
+```{r}
+stable_sl <- smcmc(stable_sl, 
+                   initPar = c(alpha = log(1.7), beta = -0.1, gamma = log(1.3), delta = 1.5),
+                   niter = 50, 
+                   burn = 0,
+                   priorFun = function(input, ...) { 
+                                 dunif(input[1], log(1), log(2), log = TRUE) + 
+                                 dunif(input[2], -1, 1, log = TRUE) 
+                                 }, 
+                   propCov = diag(c(0.1, 0.1, 0.1, 0.1))^2, 
+                   targetRate = 0.25,
+                   nsim = 200)
+plot(stable_sl, trans = c("alpha" = "exp", "gamma" = "exp"))
+```
+By slicing the likelihood at the posterior mean we check whether the model is well identified:
+```{r}
+slice(object = stable_sl, 
+      ranges = list("alpha" = log(seq(1.2, 1.9, by = 0.05)), 
+                    "beta"  = seq(-0.5, 0.5, by = 0.05),
+                    "gamma" = log(seq(0.5, 1.9, by = 0.05)),
+                    "alpha" = seq(1.1, 2.2, by = 0.05)), 
+      param = colMeans(stable_sl@chains), 
+      trans = list("alpha" = "exp", "gamma" = "exp"),
+      nsim = 1000, 
+      multicore = TRUE)
+```
+We could do better by putting some more effort in choosing the summary statistics.
+
+References
+----------------------------
+
+*  Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.
+
+* Alexander J Nicholson. An outline of the dynamics of animal populations. Australian Journal of Zoology, 2(1):9--65, 1954.
+
+*  Diethelm Wuertz, Martin Maechler and Rmetrics core team members. (2013). stabledist: Stable Distribution Functions. R package version 0.6--6.
 
 
+
+
+
+
+
+
+<!--(
 Trait model example
 ----------------------------
 
@@ -219,7 +311,7 @@ This time we have to set up the simulator ourself:
 ```{r traitSimul}
 traitSimul <- function(param, nsim, extraArgs, ...)
 { 
-  if( !is.loaded("EasyABC") ) library("EasyABC") 
+  #if( !is.loaded("EasyABC") ) library("EasyABC") 
   
   if(length(param) != 4) stop("Wrong number of parameters")
   
@@ -238,20 +330,21 @@ traitSimul <- function(param, nsim, extraArgs, ...)
 
 ```
 `trait_model` simulates the summary statistics directly, so we don't have to specify the `summaries` slot:
-```{r trait constr}
+```{r trait_constr}
 trait_sl <- synlik(simulator = traitSimul,
-                   param = c( logI = 4, logA = 0, h = 15, logsigma = log(1.5) )
+                   param = c( logI = 4, logA = 0, h = 15, logsigma = log(1.5) ),
+                   plotFun = function(input, ...) NULL
 )
 trait_sl@data <- simulate(trait_sl)
 trait_sl@data
 ```
 We check the normality of the statistics:
-```{r trait norm}
+```{r trait_norm}
 checkNorm(trait_sl, nsim = 200)
 ```
-which looks reasonable.
+which looks reasonably good.
 This model is quite slow to simulate from, hence using multiple cores can help:
-```{r trait slice ser}
+```{r trait_slice_ser}
 tim <- proc.time()
 slice(object = trait_sl, 
       ranges = list("logI" = seq(3, 6, by = 0.2)), 
@@ -262,7 +355,7 @@ slice(object = trait_sl,
 proc.time() - tim
 ```
 
-```{r trait slice par}
+```{r trait_slice_par}
 tim <- proc.time()
 slice(object = trait_sl, 
       ranges = list("logI" = seq(3, 6, by = 0.2)), 
@@ -273,21 +366,24 @@ proc.time() - tim
 ```
 
 Finally we estimate the parameters by MCMC on multiple cores:
-```{r trait smcmc}
+```{r trait_smcmc}
 trait_sl <- smcmc(trait_sl, 
                   initPar = c( logI = 4, logA = 1, h = 15, logsigma = log(3) ),
-                  niter = 100, 
+                  niter = 10, 
                   burn = 0,
                   priorFun = function(input, ...){ input[3] > -25 && input[3] < 125 } , 
                   propCov = diag(c(0.1, 0.1, 0.1, 0.1))^2, 
                   nsim = 100, 
                   targetRate = 0.2,
                   multicore = TRUE)
+plot(trait_sl)
 ```
+)--> 
 
 
-References
-----------------------------
+
+
+
 
 
 

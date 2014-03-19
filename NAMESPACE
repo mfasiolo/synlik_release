@@ -1,0 +1,22 @@
+useDynLib(synlik)
+exportPattern("^[[:alpha:]]+")
+
+# Imported stuff
+importFrom(compiler, cmpfun)
+
+importFrom(parallel, clusterApply)
+importFrom(parallel, clusterEvalQ)
+importFrom(parallel, clusterExport)
+importFrom(parallel, makeCluster)
+importFrom(parallel, stopCluster)
+importFrom(parallel, detectCores)
+
+importFrom(stats, simulate)
+importFrom(stats, coef)
+importFrom(stats, vcov)
+importFrom(stats, confint)
+
+importFrom(graphics, plot)
+
+importFrom(Matrix, nearPD)
+

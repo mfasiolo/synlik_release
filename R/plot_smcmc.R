@@ -26,7 +26,7 @@
   readline(prompt = "Press <Enter> to see the next plot...")
   
   print("Plotting correlation structure of the posterior sample")
-  .plotMatrix(cor(chains), title = "Correlations", xLabels = names(x@param), yLabels = names(x@param), 
+  .plotMatrix(cor(chains), title = "Posterior correlations", xLabels = names(x@param), yLabels = names(x@param), 
               scaleLab = "Correlation", correl = TRUE, ...)
   
   readline(prompt = "Press <Enter> to see the next plot...")

@@ -7,7 +7,7 @@
 #'
 #' @name blow_sl
 #' @rdname blow_sl
-#' @aliases blowStats
+#' @aliases blowStats blow_smcmc
 #' @seealso \link{blowSimul}
 #' @export
 #' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.

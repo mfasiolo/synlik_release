@@ -4,6 +4,10 @@ exportPattern("^[[:alpha:]]+")
 # Imported stuff
 importFrom(compiler, cmpfun)
 
+importFrom(methods)
+
+importFrom(Rcpp)
+
 importFrom(parallel, clusterApply)
 importFrom(parallel, clusterEvalQ)
 importFrom(parallel, clusterExport)

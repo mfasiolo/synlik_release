@@ -9,7 +9,7 @@
   
 ```{r setup, include=FALSE}
 library(knitr)
-opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center", tidy=FALSE)
 ```
 
 
@@ -28,7 +28,7 @@ summary statistics. The `simulator` can generate any kind of output, as long as 
 where each row is a simulated vector of statistics. If `summaries` is not specified, then `simulator` has to output such a matrix.
   
 Here we set-up a `synlik` object representing the Ricker map. The observations are given by $Y_t \sim Pois(\phi N_t)$, where the hidden state has the following dynamics: $N_t = r N_{t-1} exp( -N_{t-1} + e_t )$. This is how we create the object:
-```{r ricker_constr}
+```{r ricker_constr, results='hide'}
 library(synlik)
 ricker_sl <- synlik(simulator = rickerSimul,
                     summaries = rickerStats,
@@ -36,7 +36,7 @@ ricker_sl <- synlik(simulator = rickerSimul,
                     extraArgs = list("nObs" = 50, "nBurn" = 50)
 )
 ```
-  Here:
+Here:
 * `rickerSimul` and `rickerStats` are functions provided by `synlik`.
 * `param` is a named vector that contains the log-parameters that will be used by `rickerSimul(param, nsim, extraArgs, ...)`. 
 * `extraArgs` contains additional arguments required by `rickerSimul`, see `?rickerSimul` for details.
@@ -67,7 +67,7 @@ tmp <- simulate(ricker_sl, nsim = 2, stats = TRUE)
 tmp
 ``` 
  and to check their approximate normality:
-```{r}
+```{r, results='hide'}
 checkNorm(ricker_sl)
 ```  
  
@@ -79,8 +79,8 @@ Looking at the synthetic likelihood
 If we want to estimate the value of the synthetic likelihood at a certain location in the parameter space, we can do it by using the function `slik` as follows:
 ```{r ricker_slik}
 slik(ricker_sl, 
-           param  = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
-           nsim   = 1e3)
+     param  = c(logR = 3.8, logSigma = log(0.3), logPhi = log(10)),
+     nsim   = 1e3)
 ```  
 We can also look at slices of this function wrt each parameter:
 ```{r ricker_slice}
@@ -132,7 +132,7 @@ addline2 <- function(parNam, ...) abline(v = ricker_smcmc@param[parNam], lwd = 2
 
 plot(ricker_smcmc, addPlot1 = "addline1", addPlot2 = "addline2")
 ``` 
-were we have added some lines indicating the position of the true parameters.
+were we have added the green dotted lines, indicating the position of the true parameters.
  
  
 Blowfly example
@@ -154,9 +154,12 @@ denotes the adult survival process. Finally $e_t$ and $\epsilon_t$ are independe
 ```{r blow_constr}
 blow_sl <- synlik(simulator = blowSimul,
                   summaries = blowStats,
-                  param = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
+                  param = log( c( "delta" = 0.16, "P" = 6.5, "N0" = 400, 
+                                  "var.p" = 0.1, "tau" = 14, "var.d" = 0.1)  ),
                   extraArgs = list("nObs" = 200, "nBurn" = 200, "steps" = 1),
-                  plotFun = function(input, ...) plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+                  plotFun = function(input, ...){ 
+                              plot(drop(input), type = 'l', ylab = "Pop", xlab = "Time", ...)
+                           }
 )
 ```
 for more details see `?blow_sl`. As before we simulate data and we store it back into the object:

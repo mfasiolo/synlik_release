@@ -18,7 +18,7 @@
     if( length(tmp$lowVar) ) y <- y[-tmp$lowVar]
     
     rss <- sum( (tmp$E%*%as.vector(y-tmp$mY))^2 )
-    llk <- -rss/2 - tmp$half.ldet.V - 0.5 * lenght(y) * log(2 * pi)
+    llk <- -rss/2 - tmp$half.ldet.V - 0.5 * length(y) * log(2 * pi)
     mix <- 0
     
 #   }

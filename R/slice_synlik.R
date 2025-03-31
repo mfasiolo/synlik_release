@@ -13,7 +13,7 @@
 #'              by default.
 #' @param draw    If \code{TRUE} the slice will be plotted.
 #' @param trans Named vector or list of transformations to be applied to the parameters in \code{parName} 
-#'               before plotting {ex: \code{trans = c(s = "exp", d = "exp")}}/ 
+#'               before plotting (ex: \code{trans = c(s = "exp", d = "exp")})
 #' @param multicore  If \code{TRUE} the \code{object@@simulator} and \code{object@@summaries} functions will
 #'                    be executed in parallel. That is the \code{nsim} simulations will be divided in multiple cores.
 #' @param ncores  Number of cores to use if \code{multicore == TRUE}.

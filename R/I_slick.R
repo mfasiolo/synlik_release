@@ -18,7 +18,7 @@
 #' @return A list where \code{logLik} is the log of the estimated synthetic log-likelihood and \code{mix} is the share of saddlepoint used
 #'         (0 means no saddlepoint (only normal) and 1 means only saddlepoint (no normal)).
 #' @author Matteo Fasiolo <matteo.fasiolo@@gmail.com>    
-#' @references Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102–1104, 2010.
+#' @noRd
 #' @examples
 #' data(ricker_sl)
 #' set.seed(643)

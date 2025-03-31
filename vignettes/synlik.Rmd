@@ -28,7 +28,7 @@ summary statistics. The `simulator` can generate any kind of output, as long as 
 where each row is a simulated vector of statistics. If `summaries` is not specified, then `simulator` has to output such a matrix.
   
 Here we set-up a `synlik` object representing the Ricker map. The observations are given by $Y_t \sim Pois(\phi N_t)$, where the hidden state has the following dynamics: $N_t = r N_{t-1} exp( -N_{t-1} + e_t )$. This is how we create the object:
-```{r ricker_constr, results='hide'}
+```{r ricker_co0nstr, results='hide'}
 library(synlik)
 ricker_sl <- synlik(simulator = rickerSimul,
                     summaries = rickerStats,
@@ -221,7 +221,7 @@ stableSimul <- function(param, nsim, extraArgs, ...)
   if(abs(param[1] - 1) < 0.01) stop("alpha == 1 is not allowed")
     
   # Actual simulation
-  output <- rstable(nObs * nObs, alpha = param[1], beta = param[2], gamma = param[3], delta = param[4])
+  output <- rstable(nObs * nsim, alpha = param[1], beta = param[2], gamma = param[3], delta = param[4])
   
   return( matrix(output, nsim, nObs) )
 }

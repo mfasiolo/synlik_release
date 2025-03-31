@@ -42,7 +42,7 @@
   n.reps <- ncol(lu)
   n <- matrix(0,n.t,n.reps)
   oo <- .C("blowC", n=as.double(n), as.double(theta), as.double(e), as.double(e1), as.integer(burn.in), as.integer(n.t),
-           as.integer(n.reps), PACKAGE="synlik")
+           as.integer(n.reps))
   t(matrix(oo$n, n.t, n.reps))
 }
 
@@ -94,8 +94,9 @@ rickerSimul <- function(param, nsim, extraArgs, ...)
   if( is.null(extraArgs$initVal) ) initVal = 1.0 else initVal <- extraArgs$initVal
   
   if( !is.matrix(param) ) param <- matrix(param, 1, length(param))
-  
-  .Call( "simpleModelsWrap", model = "ricker", days = nObs, nSimul = nsim, param = param, nBurn = nBurn, randInit = randInit, initVal = initVal, PACKAGE = "synlik" )
+
+  .Call( "simpleModelsWrap", model = "ricker", days = nObs, nSimul = nsim,
+         param = param, nBurn = nBurn, randInit = randInit, initVal = initVal, PACKAGE = "synlik")
 }
 
 

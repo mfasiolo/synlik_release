@@ -9,7 +9,7 @@
   
   if( is.matrix(X) )
   {
-    out <- .Call( "cleanStats", inMat = X, PACKAGE = "synlik" )
+    out <- .Call( "cleanStats", inMat = X)
     
     if( out$nBanned > 0)
     {

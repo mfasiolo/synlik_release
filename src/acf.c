@@ -1,7 +1,4 @@
-#include <R.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "summ_stats.h"
 
 /* Routine for vectorized ACF calculation */

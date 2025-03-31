@@ -2,7 +2,7 @@
 \alias{synlik-package}
 \docType{package}
 \title{
-Synthetic Likelihood methods for intractable likelihoods
+Synthetic Likelihood Methods for Intractable Likelihoods
 }
 \description{
 Package that provides Synthetic Likelihood methods for intractable likelihoods. The package is meant to be as general purpose
@@ -12,8 +12,8 @@ as possible: as long as you are able to simulate data from your model you should
 \tabular{ll}{
 Package: \tab synlik\cr
 Type: \tab Package\cr
-Version: \tab 0.1 \cr
-Date: \tab 2014-03-20\cr
+Version: \tab 0.1.2 \cr
+Date: \tab 2018-05-22\cr
 License: \tab GPL (>=2)\cr
 }
 The package allows users to create objects of class \code{synlik} (S4), which are essentially constituted of a \code{simulator} function and 
@@ -25,14 +25,13 @@ Once the model of interest has been set up as a \code{synlik} object, it is poss
 Many functions in the package support parallel simulation on multiple cores.
 }
 \author{
-Matteo Fasiolo and Simon Wood
+Matteo Fasiolo and Simon N. Wood
 
 Maintainer: Matteo Fasiolo <matteo.fasiolo@gmail.com>
 }
 \references{
 Simon N Wood. Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466(7310):1102--1104, 2010.
 }
-\keyword{ Intractable Likelihood, Simulation-based inference. }
 \seealso{
 For some examples see the Vignettes (type \code{vignette("synlik")}).
 }

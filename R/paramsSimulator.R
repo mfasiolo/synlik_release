@@ -49,8 +49,7 @@
     # Calls C++ function that loops through output, and checks the constrainst
     output <- .Call("checkBoundsCpp", 
                     theMean_ = theMean, cholFact_ = t(cholFact), indexes_ = indexes,            
-                    upper_ = upper, lower_ = lower, output_ = output, 
-                    PACKAGE = "synlik")
+                    upper_ = upper, lower_ = lower, output_ = output)
   }
   
   # Resetting the parameters that are fixed.

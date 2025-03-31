@@ -14,14 +14,10 @@
  * by .Call. See the thread http://thread.gmane.org/gmane.comp.lang.r.rcpp/649/focus=672
  * on Rcpp-devel for a misuse of RcppExport
  */
- 
+
 RcppExport SEXP cleanStats(SEXP inMat);
 
 RcppExport SEXP checkBoundsCpp(SEXP theMean_, SEXP cholFact_, SEXP toCheck_, SEXP upper_, SEXP lower_, SEXP output_);
-
-/*
- * Simulators
- */
 
 RcppExport SEXP simpleModelsWrap(SEXP model, SEXP days, SEXP nSimul, SEXP params, SEXP nBurn, SEXP randInit, SEXP initVal);
 

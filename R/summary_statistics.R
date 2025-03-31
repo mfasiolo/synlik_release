@@ -35,7 +35,7 @@ slAcf <- function(x, max.lag=10) {
   
   acf <- matrix(0,max.lag+1,ncol(x))
   oo <- .C("slacf",acf=as.double(acf),x=as.double(x),as.integer(nrow(x)),as.integer(ncol(x)),
-           as.integer(max.lag),as.double(NAcode),correlation=as.integer(0),PACKAGE="synlik")
+           as.integer(max.lag),as.double(NAcode),correlation=as.integer(0))
   
   acf <- matrix(oo$acf,max.lag+1,ncol(x))
   acf[acf == NAcode] <- NA
@@ -100,7 +100,7 @@ nlar <- function(x,lag,power) {
   
   oo <- .C("slnlar",beta = as.double(beta), x = as.double(x),
            n=as.integer(nrow(x)),n.reps=as.integer(ncol(x)),n.terms=as.integer(length(lag)),
-           as.integer(lag),as.integer(power),as.double(NAcode),PACKAGE="synlik")
+           as.integer(lag),as.integer(power),as.double(NAcode))
   
   beta <- matrix(oo$beta,length(lag),ncol(x))
   
@@ -143,7 +143,7 @@ orderDist <- function(x,z,np=3,diff=1) {
   
   beta <- matrix(0,np,ncol(x))
   oo <- .C("order_reg",beta=as.double(beta), as.double(x),as.double(z),n=as.integer(nrow(x)),
-           as.integer(ncol(x)),as.integer(np),as.integer(diff),PACKAGE="synlik")
+           as.integer(ncol(x)),as.integer(np),as.integer(diff))
   
   beta <- matrix(oo$beta,np,ncol(x))
   

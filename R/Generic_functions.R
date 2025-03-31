@@ -10,8 +10,6 @@
 #'
 #' @param object An object representing the results of an estimation procedure which we wish to continue.
 #'               For example it might represents an MCMC chain.
-#'               
-#' @param ... Additional arguments that might be needed to continue the estimation procedure.
 #'
 #' @return An object of the same class as \code{object}, where the results of the estimation have been updated.
 #' 

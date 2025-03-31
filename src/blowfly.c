@@ -3,11 +3,7 @@ blowfly model.
 The idea is to efficiently solve the  model for multiple
 replicates, conditional on an unscaled noise vector.
 */
-  #include <R.h>
-  #include <math.h>
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include "summ_stats.h"
+#include "summ_stats.h"
   
 void blowC(double *n,double *theta,double *e,double *e1,int *burn_in,int *n_t, int *n_reps) {
 /* Simulates `n_reps', length `n_t' replicates of blowfly model, discarding an initial 

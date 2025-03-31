@@ -26,6 +26,7 @@
 #' Otherwise it tries to use the \code{plot(x = object@@data, y, ...)} generic.
 #'
 #' @param x An object of class \code{synlik}.
+#' @param y Useless argument, only here for compatibility reasons.
 #' @param ... additional arguments to be passed to \code{object@@plotFun}.
 #'
 #' @return NULL

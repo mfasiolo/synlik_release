@@ -59,10 +59,9 @@ setClassUnion("functionOrNULL", c("function", "NULL"))
 ### Class Definition
 #' \code{synlik-class}
 #' 
-#' @usage{synlik(...)}
-#' @description{ Basic class for simulation-based approximate inference using Synthetic Likelihood methods.  }
+#' @description Basic class for simulation-based approximate inference using Synthetic Likelihood methods.
 #' 
-#' \section{Slots}{
+#' @section Slots:
 #' \describe{
 #'    \item{param}{Named vector of parameters used by \code{object@@simulator} (\code{numeric}).}
 #'    \item{simulator}{Function that simulates from the model (\code{function}). It has to have prototype \code{fun(param, nsim, extraArgs, ...)}. 
@@ -154,9 +153,9 @@ synlik <- function(...)
 ### Class Definition
 #' \code{smcmc-class}
 #' 
-#' @description{ Object representing the results of MCMC estimation on an object of class \code{synlik}, from which it inherits.  }
+#' @description Object representing the results of MCMC estimation on an object of class \code{synlik}, from which it inherits.
 #' 
-#' \section{Slots}{
+#' @section Slots:
 #' \describe{
 #'    \item{initPar}{Vector of initial parameters where the MCMC chain will start (\code{numeric}).}
 #'    \item{niter}{Number of MCMC iterations (\code{integer}).}

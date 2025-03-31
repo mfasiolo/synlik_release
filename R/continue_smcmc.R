@@ -54,6 +54,17 @@
 }
 
 ##############################################################
+#' @param niter see \code{\link{smcmc-class}}.
+#' @param nsim  see \code{\link{smcmc-class}}.
+#' @param propCov see \code{\link{smcmc-class}}.
+#' @param targetRate see \code{\link{smcmc-class}}.
+#' @param recompute see \code{\link{smcmc-class}}.             
+#' @param multicore  see \code{\link{smcmc-class}}.
+#' @param ncores   see \code{\link{smcmc-class}}.
+#' @param cluster an object of class \code{c("SOCKcluster", "cluster")}. This allowes the user to pass her own cluster,
+#'                which will be used if \code{multicore == TRUE}. The user has to remember to stop the cluster. 
+#' @param control see \code{\link{smcmc-class}}.
+#' @param ... additional arguments to be passed to \code{slik} function, see \code{\link{slik}}.
 #' @details When \code{is("smcmc", object) == TRUE}  continues MCMC estimation of an object of class \code{smcmc}. All input parameters are defaulted to the corresponding
 #' slots in the input object, with the exception of cluster. The chain restarts were it ended, burn-in is set to zero, the
 #' same prior (if any) is used.

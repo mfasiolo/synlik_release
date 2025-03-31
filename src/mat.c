@@ -6,11 +6,6 @@
    unpivoted case is testable.
 */
 #include "summ_stats.h"
-#include <stdlib.h>
-#include <math.h>
-#include <R.h>
-#include <R_ext/Linpack.h>
-#include <R_ext/Lapack.h>
 /*#include <dmalloc.h>*/
 
 void mgcv_chol(double *a,int *pivot,int *n,int *rank)
@@ -80,13 +75,13 @@ void mgcv_svd(double *x,double *u,double *d,int *r,int *c)
   lwork=-1;
   /* workspace query */
   F77_NAME(dgesvd)(&jobu,&jobvt, r, c, x, &lda, d, u, &ldu, vt,&ldvt,
-  		   &work1, &lwork, &info);
+  		   &work1, &lwork, &info FCONE FCONE);
   lwork=(int)floor(work1);
   if (work1-lwork>0.5) lwork++;
   work=(double *)calloc((size_t)lwork,sizeof(double));
   /* actual call */
   F77_NAME(dgesvd)(&jobu,&jobvt, r, c, x, &lda, d, u, &ldu, vt,&ldvt,
-  		   work, &lwork, &info);
+  		   work, &lwork, &info FCONE FCONE);
   free(work);
 }
 
@@ -113,13 +108,13 @@ matrix(um[[2]],q,q);er$v
   lwork=-1;
   /* workspace query */
   F77_NAME(dgesvd)(&jobu,&jobvt, r, c, x, &lda, d, u, &ldu, vt,&ldvt,
-  		   &work1, &lwork, &info);
+  		   &work1, &lwork, &info FCONE FCONE);
   lwork=(int)floor(work1);
   if (work1-lwork>0.5) lwork++;
   work=(double *)calloc((size_t)lwork,sizeof(double));
   /* actual call */
   F77_NAME(dgesvd)(&jobu,&jobvt, r, c, x, &lda, d, u, &ldu, vt,&ldvt,
-  		   work, &lwork, &info);
+  		   work, &lwork, &info FCONE FCONE);
   free(work);
 }
 
@@ -138,11 +133,11 @@ void mgcv_td_qy(double *S,double *tau,int *m,int *n, double *B,int *left,int *tr
   if (*left) { side = 'L';nq = *m;} else nq = *n;
   if (*transpose) trans = 'T';
   /* workspace query ... */
-  F77_NAME(dormtr)(&side,&uplo,&trans,m,n,S,&nq,tau,B,m,&work1,&lwork,&info);
+  F77_NAME(dormtr)(&side,&uplo,&trans,m,n,S,&nq,tau,B,m,&work1,&lwork,&info FCONE FCONE FCONE);
   lwork=(int)floor(work1);if (work1-lwork>0.5) lwork++;
   work=(double *)calloc((size_t)lwork,sizeof(double));
   /* actual call ... */
-  F77_NAME(dormtr)(&side,&uplo,&trans,m,n,S,&nq,tau,B,m,work,&lwork,&info);
+  F77_NAME(dormtr)(&side,&uplo,&trans,m,n,S,&nq,tau,B,m,work,&lwork,&info FCONE FCONE FCONE);
   free(work);
 }
 
@@ -170,11 +165,11 @@ void mgcv_tri_diag(double *S,int *n,double *tau)
   d = (double *)calloc((size_t)*n,sizeof(double));
   e = (double *)calloc((size_t)*n-1,sizeof(double));
   /* work space query... */
-  F77_NAME(dsytrd)(&uplo,n,S,n,d,e,tau,&work1,&lwork,&info);
+  F77_NAME(dsytrd)(&uplo,n,S,n,d,e,tau,&work1,&lwork,&info FCONE);
   lwork=(int)floor(work1);if (work1-lwork>0.5) lwork++;
   work=(double *)calloc((size_t)lwork,sizeof(double));
   /* Actual call... */
-  F77_NAME(dsytrd)(&uplo,n,S,n,d,e,tau,work,&lwork,&info);
+  F77_NAME(dsytrd)(&uplo,n,S,n,d,e,tau,work,&lwork,&info FCONE);
   free(work);free(d);free(e);
 }
 
@@ -273,11 +268,11 @@ void mgcv_qrqy(double *b,double *a,double *tau,int *r,int *c,int *k,int *left,in
   if (! *left) { side='R';lda = *c;} else lda= *r;
   if ( *tp) trans='T'; 
   /* workspace query */
-  F77_NAME(dormqr)(&side,&trans,r,c,k,a,&lda,tau,b,r,&work1,&lwork,&info);
+  F77_NAME(dormqr)(&side,&trans,r,c,k,a,&lda,tau,b,r,&work1,&lwork,&info FCONE FCONE);
   lwork=(int)floor(work1);if (work1-lwork>0.5) lwork++;
   work=(double *)calloc((size_t)lwork,sizeof(double));
   /* actual call */
-  F77_NAME(dormqr)(&side,&trans,r,c,k,a,&lda,tau,b,r,work,&lwork,&info); 
+  F77_NAME(dormqr)(&side,&trans,r,c,k,a,&lda,tau,b,r,work,&lwork,&info FCONE FCONE); 
   free(work);
    
 }
@@ -386,11 +381,11 @@ void mgcv_symeig(double *A,double *ev,int *n,int *use_dsyevd,int *get_vectors,
   int lwork = -1,liwork = -1,iwork1,info,*iwork,dumi=0,n_eval=0,*isupZ,i;
   if (*get_vectors) jobz='V'; else jobz='N';
   if (*use_dsyevd)
-  { F77_NAME(dsyevd)(&jobz,&uplo,n,A,n,ev,&work1,&lwork,&iwork1,&liwork,&info);
+  { F77_NAME(dsyevd)(&jobz,&uplo,n,A,n,ev,&work1,&lwork,&iwork1,&liwork,&info FCONE FCONE);
     lwork=(int)floor(work1);if (work1-lwork>0.5) lwork++;
     work=(double *)calloc((size_t)lwork,sizeof(double));
     liwork = iwork1;iwork= (int *)calloc((size_t)liwork,sizeof(int));
-    F77_NAME(dsyevd)(&jobz,&uplo,n,A,n,ev,work,&lwork,iwork,&liwork,&info);
+    F77_NAME(dsyevd)(&jobz,&uplo,n,A,n,ev,work,&lwork,iwork,&liwork,&info FCONE FCONE);
     free(work);free(iwork);
   } else
   { Z=(double *)calloc((size_t)(*n * *n),sizeof(double)); /* eigen-vector storage */
@@ -398,14 +393,14 @@ void mgcv_symeig(double *A,double *ev,int *n,int *use_dsyevd,int *get_vectors,
     F77_NAME(dsyevr)(&jobz,&range,&uplo,
 		   n,A,n,&dum1,&dum1,&dumi,&dumi,
 		   &abstol,&n_eval,ev, 
-    		     Z,n,isupZ, &work1,&lwork,&iwork1,&liwork,&info);
+    		     Z,n,isupZ, &work1,&lwork,&iwork1,&liwork,&info FCONE FCONE FCONE);
     lwork=(int)floor(work1);if (work1-lwork>0.5) lwork++;
     work=(double *)calloc((size_t)lwork,sizeof(double));
     liwork = iwork1;iwork= (int *)calloc((size_t)liwork,sizeof(int));
     F77_NAME(dsyevr)(&jobz,&range,&uplo,
 		   n,A,n,&dum1,&dum1,&dumi,&dumi,
 		   &abstol,&n_eval,ev, 
-    		     Z,n,isupZ, work,&lwork,iwork,&liwork,&info);
+    		     Z,n,isupZ, work,&lwork,iwork,&liwork,&info FCONE FCONE FCONE);
     free(work);free(iwork);
     
     if (*descending) for (i=0;i<*n/2;i++) { /* reverse the eigenvalues */
